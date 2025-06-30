@@ -115,6 +115,7 @@ public class ClientController {
     @ExceptionHandler(Exception.class)
     public ResponseEntity<?> handleOtherExceptions(Exception ex) {
         logger.error("Unexpected error: ", ex);
+        logger.error("Unexpected error: ", ex);
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body("Something went wrong. Please try again later.");
     }
