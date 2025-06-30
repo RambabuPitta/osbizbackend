@@ -1,5 +1,6 @@
 package com.orionsolwings.osbiz.client.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.orionsolwings.osbiz.client.model.ClientModel;
 import com.orionsolwings.osbiz.client.repository.ClientRepository;
@@ -60,12 +61,21 @@ public class ClientService {
 		return clientRepository.existsByPhoneNumber(phoneNumber);
 	}
 
+	public boolean emailAddressExists(String emailAddress) {
+		return clientRepository.existsByEmailAddress(emailAddress);
+	}
+
 	// 🔹 Login with hashed password comparison
 	public ClientModel login(String email, String rawPassword) {
 		logger.info("Login attempt for email: {}", email);
 
 		ClientModel client = clientRepository.findByEmailAddress(email);
-
+		try {
+			logger.info("request Body is --->>", mapper.writeValueAsString(client));
+		} catch (JsonProcessingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		logger.info("rawpassword=========>>" + rawPassword);
 		logger.info("encryptedpassword===>>" + client.getPassword());
 		logger.info("matched..??=========>>" + passwordEncoder.matches(rawPassword, client.getPassword()));

@@ -6,10 +6,13 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ClientRepository extends MongoRepository<ClientModel, String> {
-    boolean existsByPhoneNumber(String phoneNumber);
 
-    // Optional login support
-    ClientModel findByEmailAddressAndPassword(String emailAddress, String password);
-    
-    ClientModel findByEmailAddress(String emailAddress);
+	boolean existsByPhoneNumber(String phoneNumber);
+
+	boolean existsByEmailAddress(String phoneNumber);
+
+	// Optional login support
+	ClientModel findByEmailAddressAndPassword(String emailAddress, String password);
+
+	ClientModel findByEmailAddress(String emailAddress);
 }
