@@ -1,6 +1,8 @@
 package com.orionsolwings.osbiz.client.controller;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,7 +27,7 @@ import com.orionsolwings.osbiz.client.service.ClientService;
 import jakarta.validation.Valid;
 
 @RestController
-@RequestMapping("/clients")
+@RequestMapping("/api/v1/clients")
 @CrossOrigin(origins = "*")
 public class ClientController {
 
@@ -34,22 +36,49 @@ public class ClientController {
 	@Autowired
 	private ClientService clientService;
 
+//	@PostMapping("/register")
+//	public ResponseEntity<?> createClient(@Valid @RequestBody ClientModel client) {
+//
+//		if (clientService.emailAddressExists(client.getEmailAddress())) {
+//			return ResponseEntity.status(HttpStatus.CONFLICT)
+//					.body("Email Address already exists. Please use a different one.");
+//		}
+//
+//		if (clientService.phoneNumberExists(client.getPhoneNumber())) {
+//			return ResponseEntity.status(HttpStatus.CONFLICT)
+//					.body("Phone number already exists. Please use a different one.");
+//		}
+//
+//		ClientModel savedClient = clientService.createClient(client);
+//		return ResponseEntity.status(HttpStatus.CREATED).body("Client registered successfully.");
+//	}
+	
+	
 	@PostMapping("/register")
 	public ResponseEntity<?> createClient(@Valid @RequestBody ClientModel client) {
 
-		if (clientService.emailAddressExists(client.getEmailAddress())) {
-			return ResponseEntity.status(HttpStatus.CONFLICT)
-					.body("Email Address already exists. Please use a different one.");
-		}
+	    if (clientService.emailAddressExists(client.getEmailAddress())) {
+	        Map<String, Object> errorResponse = new HashMap<>();
+	        errorResponse.put("message", "Email Address already exists. Please use a different one.");
+	        return ResponseEntity.status(HttpStatus.CONFLICT).body(errorResponse);
+	    }
 
-		if (clientService.phoneNumberExists(client.getPhoneNumber())) {
-			return ResponseEntity.status(HttpStatus.CONFLICT)
-					.body("Phone number already exists. Please use a different one.");
-		}
+	    if (clientService.phoneNumberExists(client.getPhoneNumber())) {
+	        Map<String, Object> errorResponse = new HashMap<>();
+	        errorResponse.put("message", "Phone number already exists. Please use a different one.");
+	        return ResponseEntity.status(HttpStatus.CONFLICT).body(errorResponse);
+	    }
 
-		ClientModel savedClient = clientService.createClient(client);
-		return ResponseEntity.status(HttpStatus.CREATED).body("Client registered successfully.");
+	    ClientModel savedClient = clientService.createClient(client);
+
+	    Map<String, Object> response = new HashMap<>();
+	    response.put("message", "Client registered successfully.");
+	    response.put("data", savedClient);
+
+	    return ResponseEntity.status(HttpStatus.CREATED).body(response);
 	}
+
+
 
 	@GetMapping("/getClients")
 	public ResponseEntity<?> getAllClients() {
