@@ -52,33 +52,30 @@ public class ClientController {
 //		ClientModel savedClient = clientService.createClient(client);
 //		return ResponseEntity.status(HttpStatus.CREATED).body("Client registered successfully.");
 //	}
-	
-	
+
 	@PostMapping("/register")
 	public ResponseEntity<?> createClient(@Valid @RequestBody Client client) {
 
-	    if (clientService.emailAddressExists(client.getEmailAddress())) {
-	        Map<String, Object> errorResponse = new HashMap<>();
-	        errorResponse.put("message", "Email Address already exists. Please use a different one.");
-	        return ResponseEntity.status(HttpStatus.CONFLICT).body(errorResponse);
-	    }
+		if (clientService.emailAddressExists(client.getEmailAddress())) {
+			Map<String, Object> errorResponse = new HashMap<>();
+			errorResponse.put("message", "Email Address already exists. Please use a different one.");
+			return ResponseEntity.status(HttpStatus.CONFLICT).body(errorResponse);
+		}
 
-	    if (clientService.phoneNumberExists(client.getPhoneNumber())) {
-	        Map<String, Object> errorResponse = new HashMap<>();
-	        errorResponse.put("message", "Phone number already exists. Please use a different one.");
-	        return ResponseEntity.status(HttpStatus.CONFLICT).body(errorResponse);
-	    }
+		if (clientService.phoneNumberExists(client.getPhoneNumber())) {
+			Map<String, Object> errorResponse = new HashMap<>();
+			errorResponse.put("message", "Phone number already exists. Please use a different one.");
+			return ResponseEntity.status(HttpStatus.CONFLICT).body(errorResponse);
+		}
 
-	    Client savedClient = clientService.createClient(client);
+		Client savedClient = clientService.createClient(client);
 
-	    Map<String, Object> response = new HashMap<>();
-	    response.put("message", "Client registered successfully.");
-	    response.put("data", savedClient);
+		Map<String, Object> response = new HashMap<>();
+		response.put("message", "Client registered successfully.");
+		response.put("data", savedClient);
 
-	    return ResponseEntity.status(HttpStatus.CREATED).body(response);
+		return ResponseEntity.status(HttpStatus.CREATED).body(response);
 	}
-
-
 
 	@GetMapping("/getClients")
 	public ResponseEntity<?> getAllClients() {
@@ -118,18 +115,18 @@ public class ClientController {
 	}
 
 	@PostMapping("/auth/login")
-	public ResponseEntity<?> login(/**@Valid*/ @RequestBody Client loginRequest) {
-		
-		logger.info("request Body is --->>", loginRequest.getEmailAddress());
-		
-		Client client = clientService.login(loginRequest.getEmailAddress(), loginRequest.getPassword());
+	public ResponseEntity<?> login(@RequestBody Client loginRequest) {
+		logger.info("request Body is --->> {}", loginRequest.getEmailAddress());
 
-		logger.info("Login attempt for email: {}", loginRequest.getEmailAddress());
+		Map<String, Object> loginResponse = clientService.login(loginRequest.getEmailAddress(),
+				loginRequest.getPassword());
 
-		if (client != null) {
-			return ResponseEntity.ok(client);
+		if (loginResponse != null) {
+			return ResponseEntity.ok(loginResponse);
 		} else {
-			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Login failed. Invalid email or password.");
+			Map<String, Object> error = new HashMap<>();
+			error.put("message", "Login failed. Invalid email or password.");
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(error);
 		}
 	}
 

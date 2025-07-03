@@ -1,16 +1,20 @@
 package com.orionsolwings.osbiz.client.service;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.stereotype.Service;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.orionsolwings.osbiz.client.model.Client;
 import com.orionsolwings.osbiz.client.repository.ClientRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.stereotype.Service;
-import java.util.List;
-import java.util.Optional;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 @Service
 public class ClientService {
@@ -65,26 +69,31 @@ public class ClientService {
 		return clientRepository.existsByEmailAddress(emailAddress);
 	}
 
-	// 🔹 Login with hashed password comparison
-	public Client login(String email, String rawPassword) {
-		logger.info("Login attempt for email: {}", email);
+	public Map<String, Object> login(String email, String rawPassword) {
+	    logger.info("Login attempt for email: {}", email);
 
-		Client client = clientRepository.findByEmailAddress(email);
-		try {
-			logger.info("request Body is --->>", mapper.writeValueAsString(client));
-		} catch (JsonProcessingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		logger.info("rawpassword=========>>" + rawPassword);
-		logger.info("encryptedpassword===>>" + client.getPassword());
-		logger.info("matched..??=========>>" + passwordEncoder.matches(rawPassword, client.getPassword()));
-		if (client != null && passwordEncoder.matches(rawPassword, client.getPassword())) {
-			logger.info("Login successful for: {}", email);
-			return client;
-		}
+	    Client client = clientRepository.findByEmailAddress(email);
+	    try {
+	        logger.info("request Body is --->> {}", mapper.writeValueAsString(client));
+	    } catch (JsonProcessingException e) {
+	        e.printStackTrace();
+	    }
 
-		logger.warn("Login failed for: {}", email);
-		return null;
+	    logger.info("rawpassword=========>>" + rawPassword);
+	    logger.info("encryptedpassword===>>" + (client != null ? client.getPassword() : "null"));
+	    logger.info("matched..??=========>>" + (client != null && passwordEncoder.matches(rawPassword, client.getPassword())));
+
+	    if (client != null && passwordEncoder.matches(rawPassword, client.getPassword())) {
+	        logger.info("Login successful for: {}", email);
+
+	        Map<String, Object> response = new HashMap<>();
+	        response.put("message", "Login successful");
+	        response.put("client", client);
+	        return response;
+	    }
+
+	    logger.warn("Login failed for: {}", email);
+	    return null;
 	}
+
 }
