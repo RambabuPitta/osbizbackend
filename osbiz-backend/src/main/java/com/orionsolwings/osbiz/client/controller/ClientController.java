@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.orionsolwings.osbiz.client.model.ClientModel;
+import com.orionsolwings.osbiz.client.model.Client;
 import com.orionsolwings.osbiz.client.service.ClientService;
 
 import jakarta.validation.Valid;
@@ -55,7 +55,7 @@ public class ClientController {
 	
 	
 	@PostMapping("/register")
-	public ResponseEntity<?> createClient(@Valid @RequestBody ClientModel client) {
+	public ResponseEntity<?> createClient(@Valid @RequestBody Client client) {
 
 	    if (clientService.emailAddressExists(client.getEmailAddress())) {
 	        Map<String, Object> errorResponse = new HashMap<>();
@@ -69,7 +69,7 @@ public class ClientController {
 	        return ResponseEntity.status(HttpStatus.CONFLICT).body(errorResponse);
 	    }
 
-	    ClientModel savedClient = clientService.createClient(client);
+	    Client savedClient = clientService.createClient(client);
 
 	    Map<String, Object> response = new HashMap<>();
 	    response.put("message", "Client registered successfully.");
@@ -82,7 +82,7 @@ public class ClientController {
 
 	@GetMapping("/getClients")
 	public ResponseEntity<?> getAllClients() {
-		List<ClientModel> clients = clientService.getAllClients();
+		List<Client> clients = clientService.getAllClients();
 		if (clients.isEmpty()) {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No clients found.");
 		}
@@ -98,7 +98,7 @@ public class ClientController {
 //    }
 
 	@PutMapping("/email/{email}")
-	public ResponseEntity<?> updateClient(@PathVariable String email, @Valid @RequestBody ClientModel updatedClient) {
+	public ResponseEntity<?> updateClient(@PathVariable String email, @Valid @RequestBody Client updatedClient) {
 		if (clientService.getClientByEmail(email).isEmpty()) {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND)
 					.body("Cannot update. Client not found with email: " + email);
@@ -118,11 +118,11 @@ public class ClientController {
 	}
 
 	@PostMapping("/auth/login")
-	public ResponseEntity<?> login(/**@Valid*/ @RequestBody ClientModel loginRequest) {
+	public ResponseEntity<?> login(/**@Valid*/ @RequestBody Client loginRequest) {
 		
 		logger.info("request Body is --->>", loginRequest.getEmailAddress());
 		
-		ClientModel client = clientService.login(loginRequest.getEmailAddress(), loginRequest.getPassword());
+		Client client = clientService.login(loginRequest.getEmailAddress(), loginRequest.getPassword());
 
 		logger.info("Login attempt for email: {}", loginRequest.getEmailAddress());
 

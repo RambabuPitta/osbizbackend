@@ -11,7 +11,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
 @Document(collection = "client_accounts")
-public class ClientModel {
+public class Client {
 
 	@Id
 	@NotBlank(message = "Email address is required")
@@ -71,7 +71,7 @@ public class ClientModel {
 			return true;
 		if (obj == null || getClass() != obj.getClass())
 			return false;
-		ClientModel other = (ClientModel) obj;
+		Client other = (Client) obj;
 		return Objects.equals(companyName, other.companyName) && Objects.equals(phoneNumber, other.phoneNumber)
 				&& Objects.equals(emailAddress, other.emailAddress) && Objects.equals(password, other.password);
 	}
