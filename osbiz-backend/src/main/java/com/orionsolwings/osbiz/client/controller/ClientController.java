@@ -23,7 +23,14 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.orionsolwings.osbiz.client.model.Client;
 import com.orionsolwings.osbiz.client.service.ClientService;
+import com.orionsolwings.osbiz.util.JwtUtil;
 
+import org.springframework.http.ResponseCookie;
+import org.springframework.http.HttpHeaders;
+import java.time.Duration;
+
+
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 
 @RestController
@@ -114,21 +121,60 @@ public class ClientController {
 		return ResponseEntity.ok("Client deleted successfully.");
 	}
 
+	/**@PostMapping("/auth/login")
+	public ResponseEntity<?> login(@RequestBody Client loginRequest, HttpServletResponse response) {
+	    logger.info("request Body is --->> {}", loginRequest.getEmailAddress());
+
+	    Client client = clientService.login(loginRequest.getEmailAddress(), loginRequest.getPassword());
+
+	    logger.info("Login attempt for email: {}", loginRequest.getEmailAddress());
+
+	    if (client != null) {
+	        String token = JwtUtil.generateToken(client.getEmailAddress());
+
+	        // Set token as HttpOnly cookie
+	        jakarta.servlet.http.Cookie cookie = new jakarta.servlet.http.Cookie("token", token);
+	        cookie.setHttpOnly(true);
+	        cookie.setPath("/"); // Cookie is valid for all paths
+	        cookie.setMaxAge(3600); // 1 hour
+	        response.addCookie(cookie);
+
+	        // Response JSON (client data + success message)
+	        Map<String, Object> responseBody = new HashMap<>();
+	        responseBody.put("message", "Login successful");
+	        responseBody.put("client", client);
+
+	        return ResponseEntity.ok(responseBody);
+	    } else {
+	        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Login failed. Invalid email or password.");
+	    }
+	}*/
+	
 	@PostMapping("/auth/login")
-	public ResponseEntity<?> login(@RequestBody Client loginRequest) {
-		logger.info("request Body is --->> {}", loginRequest.getEmailAddress());
+	public ResponseEntity<?> login(@RequestBody Client loginRequest, HttpServletResponse response) {
+	    Map<String, Object> loginResult = clientService.login(loginRequest.getEmailAddress(), loginRequest.getPassword());
 
-		Map<String, Object> loginResponse = clientService.login(loginRequest.getEmailAddress(),
-				loginRequest.getPassword());
+	    if (loginResult != null) {
+	        String token = (String) loginResult.get("token");
 
-		if (loginResponse != null) {
-			return ResponseEntity.ok(loginResponse);
-		} else {
-			Map<String, Object> error = new HashMap<>();
-			error.put("message", "Login failed. Invalid email or password.");
-			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(error);
-		}
+	        // Set JWT as HttpOnly cookie
+	        ResponseCookie cookie = ResponseCookie.from("token", token)
+	            .httpOnly(true)
+	            .secure(false) // true in production (HTTPS)
+	            .path("/")
+	            .maxAge(Duration.ofHours(1))
+	            .sameSite("Lax")
+	            .build();
+
+	        return ResponseEntity.ok()
+	                .header(HttpHeaders.SET_COOKIE, cookie.toString())
+	                .body(loginResult);
+	    } else {
+	        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Login failed. Invalid email or password.");
+	    }
 	}
+
+
 
 	// Global Validation Error Handler (Optional – can be placed in
 	// @ControllerAdvice too)
