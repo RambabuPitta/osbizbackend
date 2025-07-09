@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.orionsolwings.osbiz.client.model.Client;
 import com.orionsolwings.osbiz.client.repository.ClientRepository;
@@ -69,7 +70,7 @@ public class ClientService {
 		return clientRepository.existsByEmailAddress(emailAddress);
 	}
 
-	/**public Map<String, Object> login(String email, String rawPassword) {
+	public Map<String, Object> login(String email, String rawPassword) {
 	    logger.info("Login attempt for email: {}", email);
 
 	    Client client = clientRepository.findByEmailAddress(email);
@@ -94,26 +95,26 @@ public class ClientService {
 
 	    logger.warn("Login failed for: {}", email);
 	    return null;
-	} */
+	} 
 	
-	public Map<String, Object> login(String email, String rawPassword) {
-	    logger.info("Login attempt for email: {}", email);
-
-	    Client client = clientRepository.findByEmailAddress(email);
-	    if (client != null && passwordEncoder.matches(rawPassword, client.getPassword())) {
-	        logger.info("Login successful for: {}", email);
-
-	        String token = JwtUtil.generateToken(email);
-
-	        Map<String, Object> response = new HashMap<>();
-	        response.put("message", "Login successful");
-	        response.put("token", token); // send token here
-	        response.put("client", client);
-	        return response;
-	    }
-
-	    logger.warn("Login failed for: {}", email);
-	    return null;
-	}
+//	public Map<String, Object> login(String email, String rawPassword) {
+//	    logger.info("Login attempt for email: {}", email);
+//
+//	    Client client = clientRepository.findByEmailAddress(email);
+//	    if (client != null && passwordEncoder.matches(rawPassword, client.getPassword())) {
+//	        logger.info("Login successful for: {}", email);
+//
+//	        String token = JwtUtil.generateToken(email);
+//
+//	        Map<String, Object> response = new HashMap<>();
+//	        response.put("message", "Login successful");
+//	        response.put("token", token); // send token here
+//	        response.put("client", client);
+//	        return response;
+//	    }
+//
+//	    logger.warn("Login failed for: {}", email);
+//	    return null;
+//	}
 
 }
