@@ -30,8 +30,8 @@ public class CompanyProfile {
     @NotBlank(message = "Password is required")
     private String password;
 
-    @NotBlank(message = "Contact number is required")
-    private String contactNumber;
+//    @NotBlank(message = "Contact number is required")
+//    private String contactNumber;
 
     @NotBlank(message = "Website URL is required")
     private String websiteURL;
@@ -136,13 +136,13 @@ public class CompanyProfile {
 		this.password = password;
 	}
 
-	public String getContactNumber() {
-		return contactNumber;
-	}
+//	public String getContactNumber() {
+//		return contactNumber;
+//	}
 
-	public void setContactNumber(String contactNumber) {
-		this.contactNumber = contactNumber;
-	}
+//	public void setContactNumber(String contactNumber) {
+//		this.contactNumber = contactNumber;
+//	}
 
 	public String getWebsiteURL() {
 		return websiteURL;
