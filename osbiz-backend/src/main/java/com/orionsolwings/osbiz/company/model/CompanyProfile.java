@@ -1,11 +1,13 @@
 package com.orionsolwings.osbiz.company.model;
+import java.time.LocalDate;
 
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import java.time.LocalDate;
+import jakarta.validation.constraints.NotBlank;
 
 @Document(collection = "company_profiles")
 public class CompanyProfile {
@@ -13,29 +15,59 @@ public class CompanyProfile {
     @Id
     private String id;
 
+    @NotBlank(message = "Company name is required")
+    @Indexed(unique = true)
     private String companyName;
+
+    @NotBlank(message = "Email address is required")
+    @Indexed(unique = true)
     private String emailAddress;
+
+    @NotBlank(message = "Phone number is required")
+    @Indexed(unique = true)
     private String phoneNumber;
+
+    @NotBlank(message = "Password is required")
     private String password;
+
+    @NotBlank(message = "Contact number is required")
     private String contactNumber;
+
+    @NotBlank(message = "Website URL is required")
     private String websiteURL;
+
+    @NotBlank(message = "Office address is required")
     private String officeAddress;
+
+    @NotBlank(message = "Street address is required")
     private String streetAddress;
+
     private String streetAddressLine2;
+
+    @NotBlank(message = "City is required")
     private String city;
+
+    @NotBlank(message = "State is required")
     private String state;
+
+    @NotBlank(message = "Postal code is required")
     private String postal;
+
+    @NotBlank(message = "Business organization type is required")
     private String businessOrganizationType;
 
     private ContactPersonInformation contactPersonInformation;
 
     @Field("GLAccount")
+    @NotBlank(message = "GL Account is required")
     private String glAccount;
 
     @Field("Currency")
+    @NotBlank(message = "Currency is required")
     private String currency;
 
     @Field("financialYear")
+    @NotBlank(message = "Fiscal year is required")
     private String fiscalYear;
 
     @Field("bankHolderName")
@@ -315,8 +347,7 @@ public class CompanyProfile {
 	@DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     private LocalDate createtedDate;
 
-    // Reference to RolePermission
     private String roleId;
 
-    
+    // Getters and setters...
 }

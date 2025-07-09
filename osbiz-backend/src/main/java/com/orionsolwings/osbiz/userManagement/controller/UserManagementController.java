@@ -1,18 +1,29 @@
 package com.orionsolwings.osbiz.userManagement.controller;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.orionsolwings.osbiz.userManagement.dto.UserPermissionRequest;
 import com.orionsolwings.osbiz.userManagement.model.PermissionFlags;
 import com.orionsolwings.osbiz.userManagement.model.User;
 import com.orionsolwings.osbiz.userManagement.service.UserManagementService;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.http.ResponseEntity;
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.*;
+import com.orionsolwings.osbiz.util.ApiResponses;
 
 @RestController
 @RequestMapping("/api/v1/usermanagement")
@@ -118,5 +129,27 @@ public class UserManagementController {
             logger.error("Failed to fetch permissions", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error fetching permissions.");
         }
+    }
+    
+    
+    @PostMapping("/login")
+    public ResponseEntity<ApiResponses<List<PermissionFlags>>> login(@RequestBody User users) {
+    	
+    	String userId=users.getUserId();
+    	String password=users.getPassword();
+    	
+
+        logger.info("Login request received for userId: {}", userId);
+
+        ApiResponses<List<PermissionFlags>> response = userManagementService.login(userId, password);
+
+        try {
+            String json = objectMapper.writeValueAsString(response);
+            logger.info("Login response: {}", json);
+        } catch (Exception e) {
+            logger.error("Failed to convert response to JSON for logging", e);
+        }
+
+        return ResponseEntity.ok(response);
     }
 }

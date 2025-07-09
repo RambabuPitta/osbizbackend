@@ -3,6 +3,7 @@ package com.orionsolwings.osbiz.company.service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.orionsolwings.osbiz.company.model.CompanyProfile;
 import com.orionsolwings.osbiz.company.repository.CompanyProfileRepository;
+import com.orionsolwings.osbiz.userManagement.service.UserManagementService;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,6 +20,9 @@ public class CompanyProfileService {
 
     private final CompanyProfileRepository repository;
     private final ObjectMapper objectMapper;
+    
+    @Autowired
+    UserManagementService userManagementService;
 
     @Autowired
     public CompanyProfileService(CompanyProfileRepository repository, ObjectMapper objectMapper) {
@@ -29,15 +33,26 @@ public class CompanyProfileService {
     // ✅ Create
     public CompanyProfile createCompanyProfile(CompanyProfile companyProfile) {
         try {
-            logger.info("Creating Company Profile: {}", objectMapper.writeValueAsString(companyProfile));
-            CompanyProfile saved = repository.save(companyProfile);
-            logger.info("Company Profile created with ID: {}", saved.getId());
-            return saved;
+            logger.info("Received request to create Company Profile: {}", objectMapper.writeValueAsString(companyProfile));
+
+            CompanyProfile savedProfile = repository.save(companyProfile);
+            logger.info("Company Profile saved successfully with ID: {}", savedProfile.getId());
+
+            if (savedProfile != null) {
+                logger.info("Creating admin user and assigning permissions based on company profile...");
+                String msg=userManagementService.createAdminUserFromCompanyProfile(savedProfile);
+                logger.info("Admin user and permissions created for company: {}", savedProfile.getCompanyName());
+                logger.info(msg);
+            }
+
+            return savedProfile;
+
         } catch (Exception e) {
-            logger.error("Error while creating Company Profile", e);
-            throw new RuntimeException("Failed to create Company Profile");
+            logger.error("Error occurred while creating Company Profile", e);
+            throw new RuntimeException("Failed to create Company Profile", e);
         }
     }
+
 
     // ✅ Read All
     public List<CompanyProfile> getAllCompanyProfiles() {
