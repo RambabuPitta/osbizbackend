@@ -35,20 +35,19 @@ public class CompanyProfileController {
 	private CompanyProfileService companyProfileService;
 
 	@PostMapping("/createCompanyProfile")
-	public ResponseEntity<ApiResponses<CompanyProfile>> createCompanyProfile(
-			@RequestBody CompanyProfile companyProfile) {
+	public ResponseEntity<ApiResponses<Void>> createCompanyProfile(@RequestBody CompanyProfile companyProfile) {
 		try {
 			logger.info("Received Company Profile: {}", objectMapper.writeValueAsString(companyProfile));
-			CompanyProfile saved = companyProfileService.createCompanyProfile(companyProfile);
-			logger.info("Company profile saved with ID: {}", saved.getId());
+			companyProfileService.createCompanyProfile(companyProfile);
+			logger.info("Company profile saved successfully.");
 
-			ApiResponses<CompanyProfile> response = new ApiResponses<>("Company profile saved successfully.", saved);
+			ApiResponses<Void> response = new ApiResponses<>("Company profile saved successfully.", "SUCCESS");
 			return ResponseEntity.ok(response);
 
 		} catch (Exception e) {
 			logger.error("Error while saving company profile", e);
 
-			ApiResponses<CompanyProfile> errorResponse = new ApiResponses<>("Failed to save company profile.", null);
+			ApiResponses<Void> errorResponse = new ApiResponses<>("Failed to save company profile.", "FAILURE");
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
 		}
 	}
