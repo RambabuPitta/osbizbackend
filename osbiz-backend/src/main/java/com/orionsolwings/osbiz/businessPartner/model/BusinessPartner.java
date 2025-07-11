@@ -23,6 +23,18 @@ public class BusinessPartner {
 
 	@Field("business_code")
 	private String businessCode;
+	
+	private String status; 
+	
+	private String glAccount;
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
 
 	public String getId() {
 		return id;
@@ -72,7 +84,7 @@ public class BusinessPartner {
 	private String bankIFSC;
 
 	@Field("code_name")
-	private String codeName;
+	private String bankName;
 
 	@Field("currency")
 	private String currency;
@@ -298,12 +310,12 @@ public class BusinessPartner {
 		this.bankIFSC = bankIFSC;
 	}
 
-	public String getCodeName() {
-		return codeName;
+	public String getBankName() {
+		return bankName;
 	}
 
-	public void setCodeName(String codeName) {
-		this.codeName = codeName;
+	public void setBankName(String bankName) {
+		this.bankName = bankName;
 	}
 
 	public String getCurrency() {
