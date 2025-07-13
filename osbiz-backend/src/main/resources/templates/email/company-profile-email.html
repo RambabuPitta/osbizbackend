@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <title>Company Profile</title>
+    <style>
+        table { width: 100%; border-collapse: collapse; }
+        td, th { padding: 8px; border: 1px solid #ccc; }
+        th { background-color: #f2f2f2; text-align: left; }
+    </style>
+</head>
+<body>
+    <h2>Company Profile Details</h2>
+    <table>
+        <tr><th>Field</th><th>Value</th></tr>
+        <tr><td>Company Name</td><td th:text="${companyName}"></td></tr>
+        <tr><td>Email Address</td><td th:text="${emailAddress}"></td></tr>
+        <tr><td>Phone Number</td><td th:text="${phoneNumber}"></td></tr>
+        <tr><td>Website URL</td><td th:text="${websiteURL}"></td></tr>
+        <tr><td>Office Address</td><td th:text="${officeAddress}"></td></tr>
+        <tr><td>Street Address</td><td th:text="${streetAddress}"></td></tr>
+        <tr><td>Street Address Line 2</td><td th:text="${streetAddressLine2}"></td></tr>
+        <tr><td>City</td><td th:text="${city}"></td></tr>
+        <tr><td>State</td><td th:text="${state}"></td></tr>
+        <tr><td>Postal</td><td th:text="${postal}"></td></tr>
+        <tr><td>Country</td><td th:text="${country}"></td></tr>
+        <tr><td>Business Type</td><td th:text="${businessOrganizationType}"></td></tr>
+        <tr><td>GL Account</td><td th:text="${glAccount}"></td></tr>
+        <tr><td>Currency</td><td th:text="${currency}"></td></tr>
+        <tr><td>Fiscal Year</td><td th:text="${fiscalYear}"></td></tr>
+        <tr><td>Bank Holder Name</td><td th:text="${bankHolderName}"></td></tr>
+        <tr><td>Account Name</td><td th:text="${accountName}"></td></tr>
+        <tr><td>Bank Name</td><td th:text="${bankName}"></td></tr>
+        <tr><td>Bank Code</td><td th:text="${bankCode}"></td></tr>
+        <tr><td>Account Type</td><td th:text="${accountType}"></td></tr>
+        <tr><td>UPI</td><td th:text="${upi}"></td></tr>
+        <tr><td>Signup Auth</td><td th:text="${signupAuth}"></td></tr>
+        <tr><td>Verify Company</td><td th:text="${verifiyCompanyProfile}"></td></tr>
+        <tr><td>Admin Auth</td><td th:text="${adminAuth}"></td></tr>
+        <tr><td>Checkbox Confirmation</td><td th:text="${checkboxConfirmation}"></td></tr>
+        <tr><td>Created Date</td><td th:text="${createtedDate}"></td></tr>
+        <tr><td>Role ID</td><td th:text="${roleId}"></td></tr>
+        <tr><td>Contact Person</td><td th:text="${contactPersonInformation.name} + ' (' + ${contactPersonInformation.email} + ')'"></td></tr>
+    </table>
+    <p><i>This is a system-generated email from OrionSolwings.</i></p>
+</body>
+</html>

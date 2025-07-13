@@ -1,17 +1,18 @@
 package com.orionsolwings.osbiz.company.service;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.orionsolwings.osbiz.company.model.CompanyProfile;
-import com.orionsolwings.osbiz.company.repository.CompanyProfileRepository;
-import com.orionsolwings.osbiz.userManagement.service.UserManagementService;
+import java.util.List;
+import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Optional;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.orionsolwings.osbiz.company.model.CompanyProfile;
+import com.orionsolwings.osbiz.company.repository.CompanyProfileRepository;
+import com.orionsolwings.osbiz.userManagement.service.UserManagementService;
+import com.orionsolwings.osbiz.util.EmailService;
 
 @Service
 public class CompanyProfileService {
@@ -23,6 +24,9 @@ public class CompanyProfileService {
     
     @Autowired
     UserManagementService userManagementService;
+    
+    @Autowired
+    EmailService emailService;
 
     @Autowired
     public CompanyProfileService(CompanyProfileRepository repository, ObjectMapper objectMapper) {
@@ -30,7 +34,7 @@ public class CompanyProfileService {
         this.objectMapper = objectMapper;
     }
 
-    // ✅ Create
+ // ✅ Create
     public CompanyProfile createCompanyProfile(CompanyProfile companyProfile) {
         try {
             logger.info("Received request to create Company Profile: {}", objectMapper.writeValueAsString(companyProfile));
@@ -40,9 +44,13 @@ public class CompanyProfileService {
 
             if (savedProfile != null) {
                 logger.info("Creating admin user and assigning permissions based on company profile...");
-                String msg=userManagementService.createAdminUserFromCompanyProfile(savedProfile);
+                String msg = userManagementService.createAdminUserFromCompanyProfile(savedProfile);
                 logger.info("Admin user and permissions created for company: {}", savedProfile.getCompanyName());
                 logger.info(msg);
+
+                // Send email with company profile details (excluding password)
+                emailService.sendCompanyProfileEmail(savedProfile);
+                logger.info("Company profile email sent to: {}", savedProfile.getEmailAddress());
             }
 
             return savedProfile;
@@ -52,6 +60,7 @@ public class CompanyProfileService {
             throw new RuntimeException("Failed to create Company Profile", e);
         }
     }
+
 
 
     // ✅ Read All

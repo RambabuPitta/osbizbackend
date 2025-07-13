@@ -26,6 +26,14 @@ public class BusinessPartner {
 	
 	private String status; 
 	
+	public String getGlAccount() {
+		return glAccount;
+	}
+
+	public void setGlAccount(String glAccount) {
+		this.glAccount = glAccount;
+	}
+
 	private String glAccount;
 
 	public String getStatus() {
