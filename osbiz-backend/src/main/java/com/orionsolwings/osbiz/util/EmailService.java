@@ -78,4 +78,24 @@ public class EmailService {
         mailSender.send(message);
         logger.info("Email successfully sent to: {}", profile.getEmailAddress());
     }
+    
+    
+    
+    public void sendEmail(String to, String subject, String htmlBody) {
+        try {
+            MimeMessage message = mailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(message, true); // true = multipart
+
+            helper.setTo(to);
+            helper.setSubject(subject);
+            helper.setText(htmlBody, true); // true = HTML content
+
+            mailSender.send(message);
+            logger.info("Email sent successfully to: {}", to);
+
+        } catch (MessagingException e) {
+            logger.error("Failed to send email to {}: {}", to, e.getMessage());
+            throw new RuntimeException("Email sending failed: " + e.getMessage());
+        }
+    }
 }

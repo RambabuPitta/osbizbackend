@@ -15,7 +15,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.orionsolwings.osbiz.client.model.Client;
 import com.orionsolwings.osbiz.client.repository.ClientRepository;
-import com.orionsolwings.osbiz.util.JwtUtil;
+import com.orionsolwings.osbiz.util.EmailService;
+import com.orionsolwings.osbiz.util.OtpService;
 
 @Service
 public class ClientService {
@@ -26,10 +27,15 @@ public class ClientService {
 
 	@Autowired
 	private ClientRepository clientRepository;
+	
+	@Autowired
+	OtpService otpService;
 
 	// 🔹 Create (Register) a new client with hashed password
 	public Client createClient(Client client) {
 		logger.info("Registering client: {}", client.getEmailAddress());
+		
+		otpService.generateOtp(client.getEmailAddress());
 
 		// Hash the password before saving
 		String hashedPassword = passwordEncoder.encode(client.getPassword());
