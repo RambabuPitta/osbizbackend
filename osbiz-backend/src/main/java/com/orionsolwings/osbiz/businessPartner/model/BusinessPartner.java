@@ -10,16 +10,16 @@ import jakarta.validation.constraints.NotBlank;
 @Document(collection = "business_partner")
 public class BusinessPartner {
 
-	@Id
-	private String id; // This maps to MongoDB's "_id"
+//	@Id
+//	private String id; // This maps to MongoDB's "_id"
 
 	@NotBlank(message = "bpuid cannot be null or blank")
 	@Indexed(unique = true)
 	@Field("bpuid")
 	private String bpuid;
 
-	@Field("entity_name")
-	private String entityName;
+	@Field("entity_type")
+	private String entityType;
 
 	@Field("business_code")
 	private String businessCode;
@@ -44,16 +44,9 @@ public class BusinessPartner {
 		this.status = status;
 	}
 
-	public String getId() {
-		return id;
-	}
 
-	public void setId(String id) {
-		this.id = id;
-	}
-
-	@Field("company_name")
-	private String companyName;
+	@Field("entity_name")
+	private String entityName;
 
 	@Field("business_partner_name")
 	private String businessPartnerName;
@@ -198,28 +191,28 @@ public class BusinessPartner {
 		this.bpuid = bpuid;
 	}
 
-	public String getEntityName() {
-		return entityName;
-	}
-
-	public void setEntityName(String entityName) {
-		this.entityName = entityName;
-	}
-
 	public String getBusinessCode() {
 		return businessCode;
+	}
+
+	public String getEntityType() {
+		return entityType;
+	}
+
+	public void setEntityType(String entityType) {
+		this.entityType = entityType;
 	}
 
 	public void setBusinessCode(String businessCode) {
 		this.businessCode = businessCode;
 	}
 
-	public String getCompanyName() {
-		return companyName;
+	public String getEntityName() {
+		return entityName;
 	}
 
-	public void setCompanyName(String companyName) {
-		this.companyName = companyName;
+	public void setEntityName(String entityName) {
+		this.entityName = entityName;
 	}
 
 	public String getBusinessPartnerName() {

@@ -1,7 +1,7 @@
 package com.orionsolwings.osbiz.businessPartner.controller;
 
 import java.util.List;
-import java.util.Optional;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -9,11 +9,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -21,91 +21,94 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.orionsolwings.osbiz.businessPartner.model.BusinessPartner;
 import com.orionsolwings.osbiz.businessPartner.service.BusinessPartnerService;
 
-import lombok.extern.slf4j.Slf4j;
-
-@Slf4j
 @RestController
-@RequestMapping("/api/business-partners")
+@RequestMapping("/api/v1/businessPartners")
 public class BusinessPartnerController {
 
-	Logger logger=LoggerFactory.getLogger(BusinessPartnerController.class);
-	
-    @Autowired
-    private BusinessPartnerService service;
+	private static final Logger logger = LoggerFactory.getLogger(BusinessPartnerController.class);
 
-    @Autowired
-    private ObjectMapper objectMapper; // Automatically available if using Spring Boot
+	@Autowired
+	private BusinessPartnerService businessPartnerService;
 
-    // Create
-    @PostMapping("/create")
-    public ResponseEntity<BusinessPartner> create(@RequestBody BusinessPartner partner) {
-        try {
-        	logger.info("Creating business partner: {}", objectMapper.writeValueAsString(partner));
-        } catch (JsonProcessingException e) {
-        	logger.error("Error serializing request body", e);
-        }
+	@Autowired
+	private ObjectMapper objectMapper;
 
-        BusinessPartner saved = service.createBusinessPartner(partner);
-        return ResponseEntity.ok(saved);
-    }
+	@PostMapping("/createBusinessPartner")
+	public ResponseEntity<BusinessPartner> createBusinessPartner(@RequestBody BusinessPartner partner) {
+		try {
+			logger.info("Received createBusinessPartner request: {}", objectMapper.writeValueAsString(partner));
+		} catch (JsonProcessingException e) {
+			logger.error("Error serializing create request", e);
+		}
 
-    // Get by ID
-    @GetMapping("/get/{id}")
-    public ResponseEntity<BusinessPartner> getById(@PathVariable String id) {
-    	logger.info("Fetching business partner with ID: {}", id);
-        Optional<BusinessPartner> partner = service.getBusinessPartnerById(id);
-        return partner.map(ResponseEntity::ok)
-                      .orElseGet(() -> {
-                    	  logger.warn("Business partner not found for ID: {}", id);
-                          return ResponseEntity.notFound().build();
-                      });
-    }
+		BusinessPartner created = businessPartnerService.createBusinessPartner(partner);
+		return ResponseEntity.ok(created);
+	}
 
-    // Get all
-    @GetMapping("/list")
-    public ResponseEntity<List<BusinessPartner>> listAll() {
-    	logger.info("Fetching all business partners");
-        return ResponseEntity.ok(service.getAllBusinessPartners());
-    }
+	@GetMapping("/listOfBusinessPartners")
+	public ResponseEntity<List<BusinessPartner>> listBusinessPartners() {
+		logger.info("Fetching all business partners (listBusinessPartners)");
+		return ResponseEntity.ok(businessPartnerService.getAllBusinessPartners());
+	}
 
-    // Update
-    @PutMapping("/update/{id}")
-    public ResponseEntity<BusinessPartner> update(@PathVariable String id, @RequestBody BusinessPartner updated) {
-        try {
-        	logger.info("Updating business partner with ID: {} -> Data: {}", id, objectMapper.writeValueAsString(updated));
-        } catch (JsonProcessingException e) {
-        	logger.error("Error serializing update payload", e);
-        }
+	@GetMapping("/getBusinessPartner")
+	public ResponseEntity<BusinessPartner> getBusinessPartner(@RequestParam String bpuid) {
+		logger.info("Fetching business partner with bpuid: {}", bpuid);
 
-        try {
-            BusinessPartner updatedBP = service.updateBusinessPartner(id, updated);
-            return ResponseEntity.ok(updatedBP);
-        } catch (RuntimeException e) {
-        	logger.warn("Update failed, business partner not found with ID: {}", id);
-            return ResponseEntity.notFound().build();
-        }
-    }
+		BusinessPartner partner = businessPartnerService.getBusinessPartnerByBpuid(bpuid);
+		if (partner == null) {
+			logger.warn("No business partner found for bpuid: {}", bpuid);
+			return ResponseEntity.notFound().build();
+		}
 
-    // Delete
-    @DeleteMapping("/delete/{id}")
-    public ResponseEntity<Void> delete(@PathVariable String id) {
-    	logger.info("Deleting business partner with ID: {}", id);
-        service.deleteBusinessPartner(id);
-        return ResponseEntity.noContent().build();
-    }
-    
-    @GetMapping("/getByBpuid/{bpuid}")
-    public ResponseEntity<BusinessPartner> getByBpuid(@PathVariable String bpuid) {
-        logger.info("Fetching business partner with bpuid: {}", bpuid);
-        
-        BusinessPartner partner = service.getBusinessPartnerByBpuid(bpuid);
-        
-        if (partner == null) {
-            logger.warn("Business partner not found for bpuid: {}", bpuid);
-            return ResponseEntity.notFound().build();
-        }
-        
-        return ResponseEntity.ok(partner);
-    }
+		return ResponseEntity.ok(partner);
+	}
 
+	@PutMapping("/updateBusinessPartner")
+	public ResponseEntity<?> updateBusinessPartner(@RequestBody Map<String, Object> requestData) {
+		try {
+			logger.info("Received updateBusinessPartner request: {}", objectMapper.writeValueAsString(requestData));
+		} catch (JsonProcessingException e) {
+			logger.error("Error serializing update request", e);
+		}
+
+		if (!requestData.containsKey("bpuid")) {
+			logger.warn("Missing 'bpuid' in update request");
+			return ResponseEntity.badRequest().body("Missing 'bpuid' in request");
+		}
+
+		String bpuid = (String) requestData.get("bpuid");
+
+		try {
+			BusinessPartner updated = businessPartnerService.updateBusinessPartnerByFields(bpuid, requestData);
+			return ResponseEntity.ok(updated);
+		} catch (RuntimeException e) {
+			logger.warn("Update failed for bpuid: {}", bpuid, e);
+			return ResponseEntity.notFound().build();
+		}
+	}
+
+	@DeleteMapping("/deleteBusinessPartner")
+	public ResponseEntity<?> deleteBusinessPartner(@RequestBody Map<String, Object> requestData) {
+		try {
+			logger.info("Received deleteBusinessPartner request: {}", objectMapper.writeValueAsString(requestData));
+		} catch (JsonProcessingException e) {
+			logger.error("Error serializing delete request", e);
+		}
+
+		if (!requestData.containsKey("bpuid")) {
+			logger.warn("Missing 'bpuid' in delete request");
+			return ResponseEntity.badRequest().body("Missing 'bpuid' in request");
+		}
+
+		String bpuid = (String) requestData.get("bpuid");
+
+		try {
+			businessPartnerService.deleteBusinessPartnerByBpuid(bpuid);
+			return ResponseEntity.noContent().build();
+		} catch (RuntimeException e) {
+			logger.warn("Delete failed for bpuid: {}", bpuid, e);
+			return ResponseEntity.notFound().build();
+		}
+	}
 }
