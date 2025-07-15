@@ -34,7 +34,6 @@ public class CompanyProfileService {
         this.objectMapper = objectMapper;
     }
 
- // ✅ Create
     public CompanyProfile createCompanyProfile(CompanyProfile companyProfile) {
         try {
             logger.info("Received request to create Company Profile: {}", objectMapper.writeValueAsString(companyProfile));
@@ -63,20 +62,17 @@ public class CompanyProfileService {
 
 
 
-    // ✅ Read All
     public List<CompanyProfile> getAllCompanyProfiles() {
         List<CompanyProfile> profiles = repository.findAll();
         logger.info("Fetched {} Company Profiles", profiles.size());
         return profiles;
     }
 
-    // ✅ Read by ID
     public Optional<CompanyProfile> getCompanyProfileById(String id) {
         logger.info("Fetching Company Profile by ID: {}", id);
         return repository.findById(id);
     }
 
-    // ✅ Update
     public CompanyProfile updateCompanyProfile(String id, CompanyProfile updatedProfile) {
         logger.info("Attempting to update Company Profile with ID: {}", id);
         return repository.findById(id).map(existing -> {
@@ -92,7 +88,6 @@ public class CompanyProfileService {
         }).orElse(null);
     }
 
-    // ✅ Delete
     public boolean deleteCompanyProfile(String id) {
         logger.info("Attempting to delete Company Profile with ID: {}", id);
         if (repository.existsById(id)) {
@@ -105,13 +100,11 @@ public class CompanyProfileService {
         }
     }
 
-    // ✅ Check by Email
     public boolean emailExists(String email) {
         logger.info("Checking if email exists: {}", email);
         return repository.existsByEmailAddress(email);
     }
 
-    // ✅ Check by Company Name
     public boolean companyNameExists(String name) {
         logger.info("Checking if company name exists: {}", name);
         return repository.existsByCompanyName(name);
