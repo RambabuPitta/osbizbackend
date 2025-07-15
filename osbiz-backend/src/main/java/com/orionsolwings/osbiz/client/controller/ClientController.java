@@ -1,5 +1,6 @@
 package com.orionsolwings.osbiz.client.controller;
 
+import java.time.Duration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -7,7 +8,9 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -19,16 +22,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.orionsolwings.osbiz.client.model.Client;
 import com.orionsolwings.osbiz.client.service.ClientService;
-import com.orionsolwings.osbiz.util.JwtUtil;
-
-import org.springframework.http.ResponseCookie;
-import org.springframework.http.HttpHeaders;
-import java.time.Duration;
-
+import com.orionsolwings.osbiz.util.OtpService;
 
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
@@ -42,6 +41,9 @@ public class ClientController {
 
 	@Autowired
 	private ClientService clientService;
+	
+	@Autowired
+	OtpService otpService;
 
 //	@PostMapping("/register")
 //	public ResponseEntity<?> createClient(@Valid @RequestBody ClientModel client) {
@@ -174,6 +176,19 @@ public class ClientController {
 	    }
 	}
 
+	@PostMapping("/verifyOtp")
+    public ResponseEntity<String> verifyOtp(@RequestParam String email, @RequestParam String otp) {
+        logger.info("Received OTP verification request for email: {}", email);
+
+        boolean valid = otpService.verifyOtp(email, otp);
+        if (valid) {
+            logger.info("OTP verification successful for email: {}", email);
+            return ResponseEntity.ok("OTP verified successfully.");
+        } else {
+            logger.warn("OTP verification failed for email: {} with OTP: {}", email, otp);
+            return ResponseEntity.badRequest().body("Invalid or expired OTP.");
+        }
+    }
 
 
 	// Global Validation Error Handler (Optional – can be placed in
@@ -195,4 +210,6 @@ public class ClientController {
 		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
 				.body("Something went wrong. Please try again later.");
 	}
+	
+	
 }
