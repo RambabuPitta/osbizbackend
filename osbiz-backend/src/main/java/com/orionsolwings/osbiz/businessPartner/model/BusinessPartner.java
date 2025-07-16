@@ -10,8 +10,8 @@ import jakarta.validation.constraints.NotBlank;
 @Document(collection = "business_partner")
 public class BusinessPartner {
 
-//	@Id
-//	private String id; // This maps to MongoDB's "_id"
+	@Id
+	private String id; // This maps to MongoDB's "_id"
 
 	@NotBlank(message = "bpuid cannot be null or blank")
 	@Indexed(unique = true)
