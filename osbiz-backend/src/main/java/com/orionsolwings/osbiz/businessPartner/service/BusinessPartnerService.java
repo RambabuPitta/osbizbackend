@@ -65,6 +65,7 @@ public class BusinessPartnerService {
 	        summary.setEmailid(bp.getEmailAddress());
 	        summary.setPhoneNumber(bp.getPhoneNumber());
 	        summary.setPaymentType(bp.getPaymentType());
+	        summary.setId(bp.getId());
 
 	        summaries.add(summary);
 	    }

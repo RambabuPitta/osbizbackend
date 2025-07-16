@@ -47,8 +47,9 @@ public class BusinessPartnerController {
 				return ResponseEntity.status(HttpStatus.CREATED)
 						.body(new ApiResponses("Business Partner created successfully", "Success"));
 			} else {
-				return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-						.body(new ApiResponses("Failed to add Business Partner,Duplicate BPUID. A Business Partner with this ID already exists.", "Fail"));
+				return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ApiResponses(
+						"Failed to add Business Partner,Duplicate BPUID. A Business Partner with this ID already exists.",
+						"Fail"));
 			}
 
 		} catch (JsonProcessingException e) {
@@ -73,18 +74,17 @@ public class BusinessPartnerController {
 
 	@GetMapping("/getBusinessPartner")
 	public ResponseEntity<ApiResponses<BusinessPartner>> getBusinessPartner(@RequestParam String bpuid) {
-	    logger.info("Fetching business partner with bpuid: {}", bpuid);
+		logger.info("Fetching business partner with bpuid: {}", bpuid);
 
-	    BusinessPartner partner = businessPartnerService.getBusinessPartnerByBpuid(bpuid);
-	    if (partner == null) {
-	        logger.warn("No business partner found for bpuid: {}", bpuid);
-	        return ResponseEntity.status(HttpStatus.NOT_FOUND)
-	                .body(new ApiResponses<>("Failed to retrieve Business Partner details. Please try again later.", "Fail", null));
-	    }
+		BusinessPartner partner = businessPartnerService.getBusinessPartnerByBpuid(bpuid);
+		if (partner == null) {
+			logger.warn("No business partner found for bpuid: {}", bpuid);
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ApiResponses<>(
+					"Failed to retrieve Business Partner details. Please try again later.", "Fail", null));
+		}
 
-	    return ResponseEntity.ok(new ApiResponses<>("Business Partner fetched successfully", "Success", partner));
+		return ResponseEntity.ok(new ApiResponses<>("Business Partner fetched successfully", "Success", partner));
 	}
-
 
 //	@PutMapping("/updateBusinessPartner")
 //	public ResponseEntity<ApiResponses> updateBusinessPartner(@RequestBody Map<String, Object> requestData) {
@@ -123,7 +123,7 @@ public class BusinessPartnerController {
 			logger.info("Received updateBusinessPartner request: {}", objectMapper.writeValueAsString(requestData));
 
 			// Call service
-			BusinessPartner bp = businessPartnerService.updateBusinessPartner(requestData.getBpuid(), requestData);
+			BusinessPartner bp = businessPartnerService.updateBusinessPartner(requestData.getId(), requestData);
 
 			if (bp != null) {
 				return ResponseEntity.ok(new ApiResponses("BP Details Updated Successfully", "Success"));

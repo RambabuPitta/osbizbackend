@@ -2,105 +2,115 @@ package com.orionsolwings.osbiz.businessPartner.dto;
 
 public class BusinessPartnerSummary {
 
-    private String businessCode;
-    private String bpuid;
-    private String businessPartner;
-    private String entitytype;
-    private String entityName;
-    private String status;
-    private String glAccount;
-    private String billPolicy;
-    private String emailid;
-    private String phoneNumber;
-    private String paymentType;
+	private String id;
+	private String businessCode;
+	private String bpuid;
+	private String businessPartner;
 
-    // Getters and Setters
+	private String entitytype;
+	private String entityName;
+	private String status;
+	private String glAccount;
+	private String billPolicy;
+	private String emailid;
+	private String phoneNumber;
+	private String paymentType;
 
-    public String getBusinessCode() {
-        return businessCode;
-    }
+	// Getters and Setters
 
-    public void setBusinessCode(String businessCode) {
-        this.businessCode = businessCode;
-    }
+	public String getBusinessCode() {
+		return businessCode;
+	}
 
-    public String getBpuid() {
-        return bpuid;
-    }
+	public void setBusinessCode(String businessCode) {
+		this.businessCode = businessCode;
+	}
 
-    public void setBpuid(String bpuid) {
-        this.bpuid = bpuid;
-    }
+	public String getBpuid() {
+		return bpuid;
+	}
 
-    public String getBusinessPartner() {
-        return businessPartner;
-    }
+	public void setBpuid(String bpuid) {
+		this.bpuid = bpuid;
+	}
 
-    public void setBusinessPartner(String businessPartner) {
-        this.businessPartner = businessPartner;
-    }
+	public String getBusinessPartner() {
+		return businessPartner;
+	}
 
-    public String getEntitytype() {
-        return entitytype;
-    }
+	public void setBusinessPartner(String businessPartner) {
+		this.businessPartner = businessPartner;
+	}
 
-    public void setEntitytype(String entitytype) {
-        this.entitytype = entitytype;
-    }
+	public String getEntitytype() {
+		return entitytype;
+	}
 
-    public String getEntityName() {
-        return entityName;
-    }
+	public void setEntitytype(String entitytype) {
+		this.entitytype = entitytype;
+	}
 
-    public void setEntityName(String entityName) {
-        this.entityName = entityName;
-    }
+	public String getEntityName() {
+		return entityName;
+	}
 
-    public String getStatus() {
-        return status;
-    }
+	public void setEntityName(String entityName) {
+		this.entityName = entityName;
+	}
 
-    public void setStatus(String status) {
-        this.status = status;
-    }
+	public String getStatus() {
+		return status;
+	}
 
-    public String getGlAccount() {
-        return glAccount;
-    }
+	public void setStatus(String status) {
+		this.status = status;
+	}
 
-    public void setGlAccount(String glAccount) {
-        this.glAccount = glAccount;
-    }
+	public String getGlAccount() {
+		return glAccount;
+	}
 
-    public String getBillPolicy() {
-        return billPolicy;
-    }
+	public void setGlAccount(String glAccount) {
+		this.glAccount = glAccount;
+	}
 
-    public void setBillPolicy(String billPolicy) {
-        this.billPolicy = billPolicy;
-    }
+	public String getBillPolicy() {
+		return billPolicy;
+	}
 
-    public String getEmailid() {
-        return emailid;
-    }
+	public void setBillPolicy(String billPolicy) {
+		this.billPolicy = billPolicy;
+	}
 
-    public void setEmailid(String emailid) {
-        this.emailid = emailid;
-    }
+	public String getEmailid() {
+		return emailid;
+	}
 
-    public String getPhoneNumber() {
-        return phoneNumber;
-    }
+	public void setEmailid(String emailid) {
+		this.emailid = emailid;
+	}
 
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
-    }
+	public String getPhoneNumber() {
+		return phoneNumber;
+	}
 
-    public String getPaymentType() {
-        return paymentType;
-    }
+	public void setPhoneNumber(String phoneNumber) {
+		this.phoneNumber = phoneNumber;
+	}
 
-    public void setPaymentType(String paymentType) {
-        this.paymentType = paymentType;
-    }
+	public String getPaymentType() {
+		return paymentType;
+	}
+
+	public void setPaymentType(String paymentType) {
+		this.paymentType = paymentType;
+	}
+
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
 }

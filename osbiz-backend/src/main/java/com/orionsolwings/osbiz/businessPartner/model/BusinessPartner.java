@@ -23,9 +23,17 @@ public class BusinessPartner {
 
 	@Field("business_code")
 	private String businessCode;
-	
-	private String status; 
-	
+
+	private String status;
+
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
+
 	public String getGlAccount() {
 		return glAccount;
 	}
@@ -43,7 +51,6 @@ public class BusinessPartner {
 	public void setStatus(String status) {
 		this.status = status;
 	}
-
 
 	@Field("entity_name")
 	private String entityName;
