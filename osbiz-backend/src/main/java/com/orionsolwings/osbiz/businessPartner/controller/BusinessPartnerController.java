@@ -48,7 +48,7 @@ public class BusinessPartnerController {
 						.body(new ApiResponses("Business Partner created successfully", "Success"));
 			} else {
 				return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-						.body(new ApiResponses("Failed to create Business Partner", "Fail"));
+						.body(new ApiResponses("Failed to add Business Partner,Duplicate BPUID. A Business Partner with this ID already exists.", "Fail"));
 			}
 
 		} catch (JsonProcessingException e) {
@@ -72,20 +72,22 @@ public class BusinessPartnerController {
 	}
 
 	@GetMapping("/getBusinessPartner")
-	public ResponseEntity<BusinessPartner> getBusinessPartner(@RequestParam String bpuid) {
-		logger.info("Fetching business partner with bpuid: {}", bpuid);
+	public ResponseEntity<ApiResponses<BusinessPartner>> getBusinessPartner(@RequestParam String bpuid) {
+	    logger.info("Fetching business partner with bpuid: {}", bpuid);
 
-		BusinessPartner partner = businessPartnerService.getBusinessPartnerByBpuid(bpuid);
-		if (partner == null) {
-			logger.warn("No business partner found for bpuid: {}", bpuid);
-			return ResponseEntity.notFound().build();
-		}
+	    BusinessPartner partner = businessPartnerService.getBusinessPartnerByBpuid(bpuid);
+	    if (partner == null) {
+	        logger.warn("No business partner found for bpuid: {}", bpuid);
+	        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+	                .body(new ApiResponses<>("Failed to retrieve Business Partner details. Please try again later.", "Fail", null));
+	    }
 
-		return ResponseEntity.ok(partner);
+	    return ResponseEntity.ok(new ApiResponses<>("Business Partner fetched successfully", "Success", partner));
 	}
 
+
 //	@PutMapping("/updateBusinessPartner")
-//	public ResponseEntity<?> updateBusinessPartner(@RequestBody Map<String, Object> requestData) {
+//	public ResponseEntity<ApiResponses> updateBusinessPartner(@RequestBody Map<String, Object> requestData) {
 //		try {
 //			logger.info("Received updateBusinessPartner request: {}", objectMapper.writeValueAsString(requestData));
 //		} catch (JsonProcessingException e) {
@@ -94,17 +96,18 @@ public class BusinessPartnerController {
 //
 //		if (!requestData.containsKey("bpuid")) {
 //			logger.warn("Missing 'bpuid' in update request");
-//			return ResponseEntity.badRequest().body("Missing 'bpuid' in request");
+//			return ResponseEntity.badRequest().body(new ApiResponses("Missing 'bpuid' in request", "Fail"));
 //		}
 //
 //		String bpuid = (String) requestData.get("bpuid");
 //
 //		try {
-//			BusinessPartner updated = businessPartnerService.updateBusinessPartnerByFields(bpuid, requestData);
-//			return ResponseEntity.ok(updated);
+//			businessPartnerService.updateBusinessPartnerByFields(bpuid, requestData);
+//			return ResponseEntity.ok(new ApiResponses("Business Partner updated successfully", "Success"));
 //		} catch (RuntimeException e) {
 //			logger.warn("Update failed for bpuid: {}", bpuid, e);
-//			return ResponseEntity.notFound().build();
+//			return ResponseEntity.status(HttpStatus.NOT_FOUND)
+//					.body(new ApiResponses("Business Partner not found", "Fail"));
 //		}
 //	}
 
@@ -164,32 +167,29 @@ public class BusinessPartnerController {
 			return ResponseEntity.notFound().build();
 		}
 	}
-	
-	
-	
-	
+
 	// BusinessPartnerController.java
 
-	@PutMapping("/updateBusinessPartner")
-	public ResponseEntity<?> updateBusinessPartner(@RequestBody Map<String, Object> requestData) {
-	    try {
-	        logger.info("Received updateBusinessPartner request: {}", objectMapper.writeValueAsString(requestData));
-	    } catch (JsonProcessingException e) {
-	        logger.error("Error serializing update request", e);
-	    }
-
-	    if (!requestData.containsKey("bpuid")) {
-	        return ResponseEntity.badRequest().body("Missing 'bpuid' in request");
-	    }
-
-	    String bpuid = (String) requestData.get("bpuid");
-
-	    try {
-	        BusinessPartner updated = businessPartnerService.updateBusinessPartnerByFields(bpuid, requestData);
-	        return ResponseEntity.ok(updated);
-	    } catch (RuntimeException e) {
-	        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-	    }
-	}
+//	@PutMapping("/updateBusinessPartner")
+//	public ResponseEntity<?> updateBusinessPartner(@RequestBody Map<String, Object> requestData) {
+//	    try {
+//	        logger.info("Received updateBusinessPartner request: {}", objectMapper.writeValueAsString(requestData));
+//	    } catch (JsonProcessingException e) {
+//	        logger.error("Error serializing update request", e);
+//	    }
+//
+//	    if (!requestData.containsKey("bpuid")) {
+//	        return ResponseEntity.badRequest().body("Missing 'bpuid' in request");
+//	    }
+//
+//	    String bpuid = (String) requestData.get("bpuid");
+//
+//	    try {
+//	        BusinessPartner updated = businessPartnerService.updateBusinessPartnerByFields(bpuid, requestData);
+//	        return ResponseEntity.ok(updated);
+//	    } catch (RuntimeException e) {
+//	        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+//	    }
+//	}
 
 }
