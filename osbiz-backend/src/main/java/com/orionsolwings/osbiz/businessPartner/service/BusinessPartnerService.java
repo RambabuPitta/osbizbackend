@@ -92,7 +92,7 @@ public class BusinessPartnerService {
 	        throw new RuntimeException("BusinessPartner not found with ID: " + id);
 	    }
 
-	    updatedPartner.setBpuid(id); // Ensure ID is retained
+//	    updatedPartner.setBpuid(id); // Ensure ID is retained
 	    logAsJson("Updating with", updatedPartner);
 
 	    BusinessPartner saved = repository.save(updatedPartner);
