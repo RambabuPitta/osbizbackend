@@ -27,6 +27,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.orionsolwings.osbiz.client.model.Client;
 import com.orionsolwings.osbiz.client.service.ClientService;
+import com.orionsolwings.osbiz.util.ApiResponses;
 import com.orionsolwings.osbiz.util.OtpService;
 
 import jakarta.servlet.http.HttpServletResponse;
@@ -177,18 +178,21 @@ public class ClientController {
 	}
 
 	@PostMapping("/verifyOtp")
-    public ResponseEntity<String> verifyOtp(@RequestParam String email, @RequestParam String otp) {
-        logger.info("Received OTP verification request for email: {}", email);
+	public ResponseEntity<ApiResponses<String>> verifyOtp(@RequestParam String email, @RequestParam String otp) {
+	    logger.info("Received OTP verification request for email: {}", email);
 
-        boolean valid = otpService.verifyOtp(email, otp);
-        if (valid) {
-            logger.info("OTP verification successful for email: {}", email);
-            return ResponseEntity.ok("OTP verified successfully.");
-        } else {
-            logger.warn("OTP verification failed for email: {} with OTP: {}", email, otp);
-            return ResponseEntity.badRequest().body("Invalid or expired OTP.");
-        }
-    }
+	    boolean valid = otpService.verifyOtp(email, otp);
+	    if (valid) {
+	        logger.info("OTP verification successful for email: {}", email);
+	        ApiResponses<String> response = new ApiResponses<>("OTP verified successfully.", "success", null);
+	        return ResponseEntity.ok(response);
+	    } else {
+	        logger.warn("OTP verification failed for email: {} with OTP: {}", email, otp);
+	        ApiResponses<String> response = new ApiResponses<>("Invalid or expired OTP.", "failure", null);
+	        return ResponseEntity.badRequest().body(response);
+	    }
+	}
+
 
 
 	// Global Validation Error Handler (Optional – can be placed in
