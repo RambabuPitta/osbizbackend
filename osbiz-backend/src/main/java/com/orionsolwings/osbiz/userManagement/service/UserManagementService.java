@@ -103,88 +103,100 @@ public class UserManagementService {
 		return permissionRepo.findAll();
 	}
 
-
 	@Autowired
 	private BCryptPasswordEncoder passwordEncoder;
 
 	public String createAdminUserFromCompanyProfile(CompanyProfile companyProfile) {
-	    logger.info("Starting admin user creation from company profile...");
+		logger.info("Starting admin user creation from company profile...");
 
-	    String email = companyProfile.getEmailAddress();
-	    String companyName = companyProfile.getCompanyName();
+		String email = companyProfile.getEmailAddress();
+		String companyName = companyProfile.getCompanyName();
 
-	    User user = new User();
-	    user.setUserId(email);
-	    user.setName(companyName);
-	    user.setEmail(email);
-	    user.setPhoneNumber(companyProfile.getPhoneNumber());
-	    user.setPassword(passwordEncoder.encode(companyProfile.getPassword())); // Encrypt password
-	    user.setEmpId("ADMIN_" + System.currentTimeMillis());
-	    user.setRole("ADMIN");
-	    user.setActive(true);
+		User user = new User();
+		user.setUserId(email);
+		user.setName(companyName);
+		user.setEmail(email);
+		user.setPhoneNumber(companyProfile.getPhoneNumber());
+		user.setPassword(passwordEncoder.encode(companyProfile.getPassword())); // Encrypt password
+		user.setEmpId("ADMIN_" + System.currentTimeMillis());
+		user.setRole("ADMIN");
+		user.setActive(true);
 
-	    try {
-	        logger.debug("Saving admin user with email: {}", email);
-	        userRepo.save(user);
-	        logger.info("Admin user saved successfully: {}", email);
-	    } catch (Exception e) {
-	        logger.error("Error saving admin user: {}", email, e);
-	        return "Failed to save admin user.";
-	    }
+		try {
+			logger.debug("Saving admin user with email: {}", email);
+			userRepo.save(user);
+			logger.info("Admin user saved successfully: {}", email);
+		} catch (Exception e) {
+			logger.error("Error saving admin user: {}", email, e);
+			return "Failed to save admin user.";
+		}
 
-	    // Assign full permissions to all modules
-	    for (ApplicationModules module : ApplicationModules.values()) {
-	        try {
-	            PermissionFlags.PermissionId permissionId = new PermissionFlags.PermissionId();
-	            permissionId.setUserId(email);
-	            permissionId.setRole("ADMIN");
-	            permissionId.setModule(module.name());
+		// Assign full permissions to all modules
+		for (ApplicationModules module : ApplicationModules.values()) {
+			try {
+				PermissionFlags.PermissionId permissionId = new PermissionFlags.PermissionId();
+				permissionId.setUserId(email);
+				permissionId.setRole("ADMIN");
+				permissionId.setModule(module.name());
 
-	            PermissionFlags permissions = new PermissionFlags();
-	            permissions.setId(permissionId);
-	            permissions.setCreate(true);
-	            permissions.setRead(true);
-	            permissions.setUpdate(true);
-	            permissions.setDelete(true);
+				PermissionFlags permissions = new PermissionFlags();
+				permissions.setId(permissionId);
+				permissions.setCreate(true);
+				permissions.setRead(true);
+				permissions.setUpdate(true);
+				permissions.setDelete(true);
 
-	            permissionRepo.save(permissions);
-	            logger.debug("Assigned permissions for module: {}", module.name());
-	        } catch (Exception e) {
-	            logger.error("Error assigning permission for module: {} to user: {}", module.name(), email, e);
-	        }
-	    }
+				permissionRepo.save(permissions);
+				logger.debug("Assigned permissions for module: {}", module.name());
+			} catch (Exception e) {
+				logger.error("Error assigning permission for module: {} to user: {}", module.name(), email, e);
+			}
+		}
 
-	    logger.info("Completed admin setup for email: {}", email);
-	    return "Admin user and permissions created from company profile.";
+		logger.info("Completed admin setup for email: {}", email);
+		return "Admin user and permissions created from company profile.";
 	}
-	
-	
+
 	public ApiResponses<List<PermissionFlags>> login(String userId, String rawPassword) {
-	    logger.info("Attempting login for userId: {}", userId);
+		logger.info("Attempting login for userId: {}", userId);
 
-	    User user = userRepo.findByUserId(userId);
+		User user = userRepo.findByUserId(userId);
 
-	    if (user == null) {
-	        logger.warn("User not found: {}", userId);
-	        return new ApiResponses<>("Invalid user ID or password", "FAILURE", null);
-	    }
+		if (user == null) {
+			logger.warn("User not found: {}", userId);
+			return new ApiResponses<>("Invalid user ID or password", "FAILURE", null);
+		}
 
+		if (!passwordEncoder.matches(rawPassword, user.getPassword())) {
+			logger.warn("Password mismatch for user: {}", userId);
+			return new ApiResponses<>("Invalid user ID or password", "FAILURE", null);
+		}
 
-	    if (!passwordEncoder.matches(rawPassword, user.getPassword())) {
-	        logger.warn("Password mismatch for user: {}", userId);
-	        return new ApiResponses<>("Invalid user ID or password", "FAILURE", null);
-	    }
-
-	    try {
-	        List<PermissionFlags> permissions = permissionRepo.findByIdUserId(userId);
-	        String jsonPermissions = objectMapper.writeValueAsString(permissions);
-	        logger.info("User {} login successful. Permissions: {}", userId, jsonPermissions);
-	        return new ApiResponses<>("Login successful", "SUCCESS", permissions);
-	    } catch (Exception e) {
-	        logger.error("Error retrieving permissions for user: {}", userId, e);
-	        return new ApiResponses<>("Login successful but failed to fetch permissions", "PARTIAL_SUCCESS", null);
-	    }
+		try {
+			List<PermissionFlags> permissions = permissionRepo.findByIdUserId(userId);
+			String jsonPermissions = objectMapper.writeValueAsString(permissions);
+			logger.info("User {} login successful. Permissions: {}", userId, jsonPermissions);
+			return new ApiResponses<>("Login successful", "SUCCESS", permissions);
+		} catch (Exception e) {
+			logger.error("Error retrieving permissions for user: {}", userId, e);
+			return new ApiResponses<>("Login successful but failed to fetch permissions", "PARTIAL_SUCCESS", null);
+		}
 	}
 
+	public boolean checkIfEmailExists(String email) {
+		return userRepo.existsByEmail(email);
+	}
+
+	public ApiResponses<String> setNewPassword(String email, String password) {
+		User user = userRepo.findByUserId(email);
+
+		if (user != null) {
+			user.setPassword(passwordEncoder.encode(password)); 
+			userRepo.save(user);
+			return new ApiResponses<>("Password updated successfully", "success");
+		} else {
+			return new ApiResponses<>("Email not found", "failed");
+		}
+	}
 
 }

@@ -6,6 +6,7 @@ import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -24,6 +25,8 @@ import com.orionsolwings.osbiz.userManagement.model.PermissionFlags;
 import com.orionsolwings.osbiz.userManagement.model.User;
 import com.orionsolwings.osbiz.userManagement.service.UserManagementService;
 import com.orionsolwings.osbiz.util.ApiResponses;
+import com.orionsolwings.osbiz.util.EmailService;
+import com.orionsolwings.osbiz.util.OtpService;
 
 @RestController
 @RequestMapping("/api/v1/usermanagement")
@@ -32,6 +35,15 @@ public class UserManagementController {
     private static final Logger logger = LoggerFactory.getLogger(UserManagementController.class);
     private final UserManagementService userManagementService;
     private final ObjectMapper objectMapper;
+    
+    @Autowired
+    OtpService otpService;
+
+    @Autowired
+    EmailService emailService;
+    
+    @Autowired
+    UserManagementService userService;
 
     public UserManagementController(UserManagementService userManagementService, ObjectMapper objectMapper) {
         this.userManagementService = userManagementService;
@@ -152,4 +164,31 @@ public class UserManagementController {
 
         return ResponseEntity.ok(response);
     }
+    
+    
+    @PostMapping("/forgot-password")
+	public ResponseEntity<ApiResponses<String>> forgotPassword(@RequestParam String email) {
+	    boolean emailExists = userService.checkIfEmailExists(email);
+	    if (!emailExists) {
+	        return ResponseEntity.badRequest().body(new ApiResponses<>("Email not found", "failure"));
+	    }
+
+	    String otp = otpService.generateOtp(email);
+
+	    return ResponseEntity.ok(new ApiResponses<>("OTP sent to registered email", "success"));
+	}
+    
+    @PostMapping("/setNewPassword")
+    public ResponseEntity<ApiResponses<String>> setNewPassword(@RequestParam String email, @RequestParam String password) {
+        ApiResponses<String> response = userManagementService.setNewPassword(email, password);
+        if ("success".equalsIgnoreCase(response.getStatus())) {
+            return ResponseEntity.ok(response);
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+        }
+    }
+
+    
+    
+
 }

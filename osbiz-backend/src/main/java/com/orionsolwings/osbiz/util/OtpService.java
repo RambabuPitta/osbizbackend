@@ -54,4 +54,6 @@ public class OtpService {
         logger.warn("OTP verification failed for email: {} with OTP: {}", email, inputOtp);
         return false;
     }
+    
+    
 }
