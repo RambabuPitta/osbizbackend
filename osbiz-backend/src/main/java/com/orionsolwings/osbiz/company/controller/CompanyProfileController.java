@@ -52,7 +52,6 @@ public class CompanyProfileController {
 		}
 	}
 
-	// ✅ READ ALL
 	@GetMapping("/getAllCompanyProfiles")
 	public ResponseEntity<List<CompanyProfile>> getAllCompanyProfiles() {
 		List<CompanyProfile> profiles = companyProfileService.getAllCompanyProfiles();
@@ -60,7 +59,6 @@ public class CompanyProfileController {
 		return ResponseEntity.ok(profiles);
 	}
 
-	// ✅ READ BY ID
 	@GetMapping("/getCompanyProfileById/{id}")
 	public ResponseEntity<?> getCompanyProfileById(@PathVariable String id) {
 		Optional<CompanyProfile> profile = companyProfileService.getCompanyProfileById(id);
@@ -73,7 +71,6 @@ public class CompanyProfileController {
 		}
 	}
 
-	// ✅ UPDATE
 	@PutMapping("/updateCompanyProfileById/{id}")
 	public ResponseEntity<?> updateCompanyProfile(@PathVariable String id, @RequestBody CompanyProfile updatedProfile) {
 		CompanyProfile updated = companyProfileService.updateCompanyProfile(id, updatedProfile);
@@ -86,7 +83,6 @@ public class CompanyProfileController {
 		}
 	}
 
-	// ✅ DELETE
 	@DeleteMapping("/deleteCompanyProfileById/{id}")
 	public ResponseEntity<String> deleteCompanyProfile(@PathVariable String id) {
 		boolean deleted = companyProfileService.deleteCompanyProfile(id);

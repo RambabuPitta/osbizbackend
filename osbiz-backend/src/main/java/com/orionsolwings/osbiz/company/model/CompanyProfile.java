@@ -14,6 +14,29 @@ public class CompanyProfile {
 
     @Id
     private String id;
+    
+    @NotBlank(message = "Business Code is required")
+    @Indexed(unique = true)
+    private String businessCode;
+    
+    public String getBusinessCode() {
+		return businessCode;
+	}
+
+	public void setBusinessCode(String businessCode) {
+		this.businessCode = businessCode;
+	}
+
+	public String getParentBusinessCode() {
+		return parentBusinessCode;
+	}
+
+	public void setParentBusinessCode(String parentBusinessCode) {
+		this.parentBusinessCode = parentBusinessCode;
+	}
+
+    @NotBlank(message = "Parent company's business code is required")
+	private String parentBusinessCode;
 
     @NotBlank(message = "Company name is required")
     @Indexed(unique = true)
@@ -349,5 +372,4 @@ public class CompanyProfile {
 
     private String roleId;
 
-    // Getters and setters...
-}
+   }
