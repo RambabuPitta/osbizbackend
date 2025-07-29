@@ -1,11 +1,11 @@
-package com.orionsolwings.osbiz.businessPartner.repository;
+package com.orionsolwings.osbiz.businesspartner.repository;
 
 import java.util.List;
 
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 
-import com.orionsolwings.osbiz.businessPartner.model.BusinessPartner;
+import com.orionsolwings.osbiz.businesspartner.model.BusinessPartner;
 
 @Repository
 public interface BusinessPartnerRepository extends MongoRepository<BusinessPartner, String> {

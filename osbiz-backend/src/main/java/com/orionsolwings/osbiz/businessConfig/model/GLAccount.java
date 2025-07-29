@@ -1,10 +1,14 @@
 package com.orionsolwings.osbiz.businessConfig.model;
 
 import java.time.ZonedDateTime;
+import java.util.Date;
 import java.util.Objects;
 
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
+
+import jakarta.validation.constraints.NotBlank;
 
 @Document(collection = "gl_accounts")
 public class GLAccount {
@@ -12,13 +16,16 @@ public class GLAccount {
 	@Id
 	private String id;
 	private String businessCode;
+	
+	@NotBlank(message = "glAccount is required")
+	@Indexed(unique = true)
 	private String glAccount;
 	private String entityType;
 	private String billPolicy;
 	private String accountType;
 	private String status;
-	private ZonedDateTime createdDate;
-	private ZonedDateTime updatedDate;
+	private Date createdDate;
+	private Date updatedDate;
 
 	@Override
 	public int hashCode() {
@@ -106,22 +113,23 @@ public class GLAccount {
 		this.status = status;
 	}
 
-	public ZonedDateTime getCreatedDate() {
+	public Date getCreatedDate() {
 		return createdDate;
 	}
 
-	public void setCreatedDate(ZonedDateTime createdDate) {
+	public void setCreatedDate(Date createdDate) {
 		this.createdDate = createdDate;
 	}
 
-	public ZonedDateTime getUpdatedDate() {
+	public Date getUpdatedDate() {
 		return updatedDate;
 	}
 
-	public void setUpdatedDate(ZonedDateTime updatedDate) {
+	public void setUpdatedDate(Date updatedDate) {
 		this.updatedDate = updatedDate;
 	}
 
+	
 	// Getters and Setters
 	// (Omitted here for brevity - generate via IDE or Lombok if preferred)
 }

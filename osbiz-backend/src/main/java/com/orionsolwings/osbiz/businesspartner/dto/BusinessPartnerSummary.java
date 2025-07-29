@@ -1,4 +1,4 @@
-package com.orionsolwings.osbiz.businessPartner.dto;
+package com.orionsolwings.osbiz.businesspartner.dto;
 
 public class BusinessPartnerSummary {
 

@@ -25,7 +25,8 @@ public class GLAccountController {
 
     @GetMapping("/{id}")
     public ResponseEntity<ApiResponses<GLAccount>> getById(@PathVariable String id) {
-        Optional<GLAccount> optional = service.getGLAccountById(id);
+//      Optional<GLAccount> optional = service.getGLAccountById(id);
+      Optional<GLAccount> optional = service.getGLAccountByAccNo(id);
         if (optional.isPresent()) {
             return ResponseEntity.ok(new ApiResponses<>("GL Account found", "success", optional.get()));
         } else {

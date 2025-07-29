@@ -1,4 +1,4 @@
-package com.orionsolwings.osbiz.businessPartner.controller;
+package com.orionsolwings.osbiz.businesspartner.controller;
 
 import java.util.List;
 import java.util.Map;
@@ -19,9 +19,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.orionsolwings.osbiz.businessPartner.dto.BusinessPartnerSummary;
-import com.orionsolwings.osbiz.businessPartner.model.BusinessPartner;
-import com.orionsolwings.osbiz.businessPartner.service.BusinessPartnerService;
+import com.orionsolwings.osbiz.businesspartner.dto.BusinessPartnerSummary;
+import com.orionsolwings.osbiz.businesspartner.model.BusinessPartner;
+import com.orionsolwings.osbiz.businesspartner.service.BusinessPartnerService;
 import com.orionsolwings.osbiz.util.ApiResponses;
 
 @RestController

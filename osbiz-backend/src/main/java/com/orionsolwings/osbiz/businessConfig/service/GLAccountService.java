@@ -11,4 +11,5 @@ public interface GLAccountService {
     List<GLAccount> getAllGLAccounts();
     GLAccount updateGLAccount(String id, GLAccount account);
     void deleteGLAccount(String id);
+	Optional<GLAccount> getGLAccountByAccNo(String id);
 }
