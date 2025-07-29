@@ -1,6 +1,5 @@
 package com.orionsolwings.osbiz.businessConfig.service.impl;
 
-import java.time.ZonedDateTime;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -8,6 +7,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import org.springframework.dao.DuplicateKeyException;
 import com.orionsolwings.osbiz.businessConfig.model.GLAccount;
 import com.orionsolwings.osbiz.businessConfig.repository.GLAccountRepository;
 import com.orionsolwings.osbiz.businessConfig.service.GLAccountService;
@@ -22,11 +22,15 @@ public class GLAccountServiceImpl implements GLAccountService {
 
     @Override
     public GLAccount createGLAccount(GLAccount account) {
-    	now = new Date();
-    	account.setCreatedDate(now);
-    	account.setUpdatedDate(now);
+        Date now = new Date();
+        account.setCreatedDate(now);
+        account.setUpdatedDate(now);
 
-        return repository.save(account);
+        try {
+            return repository.save(account);
+        } catch (DuplicateKeyException e) {
+            throw new RuntimeException("GL Account already exists with this glAccount number");
+        }
     }
 
     @Override
