@@ -1,4 +1,4 @@
-package com.orionsolwings.osbiz.businessConfig.controller;
+package com.orionsolwings.osbiz.businessConfig.dto;
 
 import com.orionsolwings.osbiz.businessConfig.model.GLAccount;
 import com.orionsolwings.osbiz.businessConfig.service.GLAccountService;

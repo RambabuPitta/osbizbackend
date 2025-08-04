@@ -1,9 +1,24 @@
 package com.orionsolwings.osbiz.employee.management.model;
 
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
+import org.springframework.data.mongodb.core.mapping.Document;
+
+@Document(collection = "employee")
 public class Employee {
+	
+	@Id
+	private String id;
+
+	@Indexed(unique = true)
 	private String employeeId;
+	
+	@Indexed(unique = true)
 	private String emailId;
+	
+	@Indexed(unique = true)
 	private String phoneNumber;
+	
 	private EmployeePersonalDetails personalDetails;
 	private AddressDetails addressDetails;
 	private BankDetails bankDetails;

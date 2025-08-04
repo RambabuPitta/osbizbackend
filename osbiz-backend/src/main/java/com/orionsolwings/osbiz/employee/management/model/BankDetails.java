@@ -1,8 +1,11 @@
 package com.orionsolwings.osbiz.employee.management.model;
 
+import org.springframework.data.mongodb.core.index.Indexed;
+
 public class BankDetails {
 	private String accountHolderName;
 	private String bankName;
+	@Indexed(unique = true)
 	private String accountNumber;
 	private String ifscCode;
 	private String branch;

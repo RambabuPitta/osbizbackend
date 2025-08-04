@@ -2,14 +2,30 @@ package com.orionsolwings.osbiz.employee.management.model;
 
 import java.time.LocalDate;
 
+import org.springframework.data.mongodb.core.index.Indexed;
+
 public class EmployeePersonalDetails {
-	private String employeeName;
-	private String gender;
-	private LocalDate dateOfBirth;
-	private LocalDate dateOfJoining;
-	private String department;
-	private String designation;
-	private String panNumber;
+
+    private String employeeName;
+    private String gender;
+    private LocalDate dateOfBirth;
+    private LocalDate dateOfJoining;
+    private String department;
+    private String designation;
+
+    @Indexed(unique = true)
+    private String panNumber;
+
+    @Indexed(unique = true)
+    private String aadharNumber;
+
+    @Indexed(unique = true)
+    private String passportNumber;
+
+    @Indexed(unique = true)
+    private String drivingLicenseNumber;
+
+    private boolean enablePortal;
 
 	public String getEmployeeName() {
 		return employeeName;
@@ -99,10 +115,5 @@ public class EmployeePersonalDetails {
 		this.enablePortal = enablePortal;
 	}
 
-	private String aadharNumber;
-	private String passportNumber;
-	private String drivingLicenseNumber;
-	private boolean enablePortal;
-
-	// Getters and Setters
+    // Getters and Setters...
 }
