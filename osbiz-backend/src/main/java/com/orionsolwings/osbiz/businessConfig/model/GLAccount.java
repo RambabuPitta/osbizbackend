@@ -1,36 +1,49 @@
 package com.orionsolwings.osbiz.businessConfig.model;
 
-import java.time.ZonedDateTime;
 import java.util.Date;
 import java.util.Objects;
 
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.CompoundIndex;
+import org.springframework.data.mongodb.core.index.CompoundIndexes;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import jakarta.validation.constraints.NotBlank;
 
 @Document(collection = "gl_accounts")
+
+@CompoundIndexes({
+    @CompoundIndex(name = "unique_businessCode_accountType", 
+                   def = "{'businessCode': 1, 'accountType': 1}", 
+                   unique = true)
+})
 public class GLAccount {
 
 	@Id
 	private String id;
+	
 	private String businessCode;
 	
 	@NotBlank(message = "glAccount is required")
 	@Indexed(unique = true)
 	private String glAccount;
-	private String entityType;
-	private String billPolicy;
-	private String accountType;
-	private String status;
+
+    @NotBlank(message = "entityType is required")
+    private String entityType;
+
+    @NotBlank(message = "billPolicy is required")
+    private String billPolicy;
+
+    @NotBlank(message = "accountType is required")
+    private String accountType;
+    
+    
 	private Date createdDate;
-	private Date updatedDate;
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(accountType, billPolicy, businessCode, createdDate, entityType, glAccount, id, status,
-				updatedDate);
+		return Objects.hash(accountType, billPolicy, businessCode, createdDate, entityType, glAccount, id);
 	}
 
 	@Override
@@ -46,15 +59,14 @@ public class GLAccount {
 		return Objects.equals(accountType, other.accountType) && Objects.equals(billPolicy, other.billPolicy)
 				&& Objects.equals(businessCode, other.businessCode) && Objects.equals(createdDate, other.createdDate)
 				&& Objects.equals(entityType, other.entityType) && Objects.equals(glAccount, other.glAccount)
-				&& Objects.equals(id, other.id) && Objects.equals(status, other.status)
-				&& Objects.equals(updatedDate, other.updatedDate);
+				&& Objects.equals(id, other.id) ;
 	}
 
 	@Override
 	public String toString() {
 		return "GLAccount [id=" + id + ", businessCode=" + businessCode + ", glAccount=" + glAccount + ", entityType="
-				+ entityType + ", billPolicy=" + billPolicy + ", accountType=" + accountType + ", status=" + status
-				+ ", createdDate=" + createdDate + ", updatedDate=" + updatedDate + "]";
+				+ entityType + ", billPolicy=" + billPolicy + ", accountType=" + accountType + ", status=" + 
+				", createdDate=" + createdDate + ", updatedDate="  + "]";
 	}
 
 	public String getId() {
@@ -105,13 +117,7 @@ public class GLAccount {
 		this.accountType = accountType;
 	}
 
-	public String getStatus() {
-		return status;
-	}
 
-	public void setStatus(String status) {
-		this.status = status;
-	}
 
 	public Date getCreatedDate() {
 		return createdDate;
@@ -120,14 +126,14 @@ public class GLAccount {
 	public void setCreatedDate(Date createdDate) {
 		this.createdDate = createdDate;
 	}
-
-	public Date getUpdatedDate() {
-		return updatedDate;
-	}
-
-	public void setUpdatedDate(Date updatedDate) {
-		this.updatedDate = updatedDate;
-	}
+//
+//	public Date getUpdatedDate() {
+//		return updatedDate;
+//	}
+//
+//	public void setUpdatedDate(Date updatedDate) {
+//		this.updatedDate = updatedDate;
+//	}
 
 	
 	// Getters and Setters

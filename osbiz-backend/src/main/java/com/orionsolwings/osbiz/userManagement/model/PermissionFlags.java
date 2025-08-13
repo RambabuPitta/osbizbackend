@@ -1,9 +1,10 @@
 package com.orionsolwings.osbiz.userManagement.model;
 
+import java.util.List;
+import java.util.Objects;
+
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
-
-import java.util.Objects;
 
 @Document(collection = "permissions")
 public class PermissionFlags {
@@ -11,51 +12,59 @@ public class PermissionFlags {
     @Id
     private PermissionId id;
 
-    private boolean create;
-    private boolean update;
-    private boolean read;
-    private boolean delete;
+    private List<String> permissions;
 
     // Getters and Setters
     public PermissionId getId() {
         return id;
     }
 
-    public void setId(PermissionId id) {
+    public List<String> getPermissions() {
+		return permissions;
+	}
+
+	public void setPermissions(List<String> permissions) {
+		this.permissions = permissions;
+	}
+
+	public void setId(PermissionId id) {
         this.id = id;
     }
 
-    public boolean isCreate() {
-        return create;
-    }
-
-    public void setCreate(boolean create) {
-        this.create = create;
-    }
-
-    public boolean isUpdate() {
-        return update;
-    }
-
-    public void setUpdate(boolean update) {
-        this.update = update;
-    }
-
-    public boolean isRead() {
-        return read;
-    }
-
-    public void setRead(boolean read) {
-        this.read = read;
-    }
-
-    public boolean isDelete() {
-        return delete;
-    }
-
-    public void setDelete(boolean delete) {
-        this.delete = delete;
-    }
+//    public boolean isCreate() {
+//        return create;
+//    }
+//
+//    public void setCreate(boolean create) {
+//        this.create = create;
+//    }
+//
+//    public boolean isUpdate() {
+//        return update;
+//    }
+//
+//    public void setUpdate(boolean update) {
+//        this.update = update;
+//    }
+//
+//    public boolean isRead() {
+//        return read;
+//    }
+//
+//    public void setRead(boolean read) {
+//        this.read = read;
+//    }
+//
+//    public boolean isDelete() {
+//        return delete;
+//    }
+//
+//    public void setDelete(boolean delete) {
+//        this.delete = delete;
+//    }
+    
+    
+    
 
     // Static embedded ID class
     public static class PermissionId {

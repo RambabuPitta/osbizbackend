@@ -20,18 +20,39 @@ public class GLAccountServiceImpl implements GLAccountService {
     
     Date now ;
 
+//    @Override
+//    public GLAccount createGLAccount(GLAccount account) {
+//        Date now = new Date();
+//        account.setCreatedDate(now);
+//
+//        try {
+//            return repository.save(account);
+//        } catch (DuplicateKeyException e) {
+//            throw new RuntimeException("GL Account already exists with this glAccount number");
+//        }
+//    }
+    
     @Override
     public GLAccount createGLAccount(GLAccount account) {
         Date now = new Date();
         account.setCreatedDate(now);
-        account.setUpdatedDate(now);
 
         try {
             return repository.save(account);
         } catch (DuplicateKeyException e) {
-            throw new RuntimeException("GL Account already exists with this glAccount number");
+            // Check exception message or error code for specific index failure (optional)
+            String errorMessage = e.getMessage();
+            if (errorMessage != null && errorMessage.contains("unique_businessCode_accountType")) {
+                throw new RuntimeException("GL Account with businessCode '" + account.getBusinessCode() + 
+                    "' and accountType '" + account.getAccountType() + "' already exists.");
+            } else if (errorMessage != null && errorMessage.contains("glAccount")) {
+                throw new RuntimeException("GL Account already exists with glAccount number: " + account.getGlAccount());
+            } else {
+                throw new RuntimeException("Duplicate key error: " + e.getMessage());
+            }
         }
     }
+
 
     @Override
     public Optional<GLAccount> getGLAccountById(String id) {
@@ -58,8 +79,6 @@ public class GLAccountServiceImpl implements GLAccountService {
             account.setEntityType(updatedAccount.getEntityType());
             account.setBillPolicy(updatedAccount.getBillPolicy());
             account.setAccountType(updatedAccount.getAccountType());
-            account.setStatus(updatedAccount.getStatus());
-            account.setUpdatedDate(now);
             return repository.save(account);
         }).orElseThrow(() -> new RuntimeException("GLAccount not found"));
     }

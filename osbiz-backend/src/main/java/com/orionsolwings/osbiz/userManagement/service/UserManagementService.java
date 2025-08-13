@@ -1,5 +1,6 @@
 package com.orionsolwings.osbiz.userManagement.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -12,11 +13,13 @@ import org.springframework.stereotype.Service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.orionsolwings.osbiz.common.enums.ApplicationModules;
 import com.orionsolwings.osbiz.company.model.CompanyProfile;
+import com.orionsolwings.osbiz.userManagement.model.LoginResponse;
 import com.orionsolwings.osbiz.userManagement.model.PermissionFlags;
 import com.orionsolwings.osbiz.userManagement.model.User;
 import com.orionsolwings.osbiz.userManagement.repository.PermissionsRepository;
 import com.orionsolwings.osbiz.userManagement.repository.UserManagementRepository;
 import com.orionsolwings.osbiz.util.ApiResponses;
+import com.orionsolwings.osbiz.util.JwtUtil;
 
 @Service
 public class UserManagementService {
@@ -134,6 +137,12 @@ public class UserManagementService {
 		// Assign full permissions to all modules
 		for (ApplicationModules module : ApplicationModules.values()) {
 			try {
+				
+				List<String> cruds=new ArrayList<>();
+				cruds.add("create");
+				cruds.add("update");
+				cruds.add("read");
+				cruds.add("delete");
 				PermissionFlags.PermissionId permissionId = new PermissionFlags.PermissionId();
 				permissionId.setUserId(email);
 				permissionId.setRole("ADMIN");
@@ -141,10 +150,7 @@ public class UserManagementService {
 
 				PermissionFlags permissions = new PermissionFlags();
 				permissions.setId(permissionId);
-				permissions.setCreate(true);
-				permissions.setRead(true);
-				permissions.setUpdate(true);
-				permissions.setDelete(true);
+				permissions.setPermissions(cruds);
 
 				permissionRepo.save(permissions);
 				logger.debug("Assigned permissions for module: {}", module.name());
@@ -157,32 +163,66 @@ public class UserManagementService {
 		return "Admin user and permissions created from company profile.";
 	}
 
-	public ApiResponses<List<PermissionFlags>> login(String userId, String rawPassword) {
-		logger.info("Attempting login for userId: {}", userId);
+//	public ApiResponses<List<PermissionFlags>> login(String userId, String rawPassword) {
+//		logger.info("Attempting login for userId: {}", userId);
+//
+//		User user = userRepo.findByUserId(userId);
+//
+//		if (user == null) {
+//			logger.warn("User not found: {}", userId);
+//			return new ApiResponses<>("Invalid user ID or password", "FAILURE", null);
+//		}
+//
+//		if (!passwordEncoder.matches(rawPassword, user.getPassword())) {
+//			logger.warn("Password mismatch for user: {}", userId);
+//			return new ApiResponses<>("Invalid user ID or password", "FAILURE", null);
+//		}
+//
+//		try {
+//			List<PermissionFlags> permissions = permissionRepo.findByIdUserId(userId);
+//			String jsonPermissions = objectMapper.writeValueAsString(permissions);
+//			logger.info("User {} login successful. Permissions: {}", userId, jsonPermissions);
+//			return new ApiResponses<>("Login successful", "SUCCESS", permissions);
+//		} catch (Exception e) {
+//			logger.error("Error retrieving permissions for user: {}", userId, e);
+//			return new ApiResponses<>("Login successful but failed to fetch permissions", "PARTIAL_SUCCESS", null);
+//		}
+//	}
 
-		User user = userRepo.findByUserId(userId);
+	
+	public ApiResponses<LoginResponse> login(String userId, String rawPassword) {
+	    logger.info("Attempting login for userId: {}", userId);
 
-		if (user == null) {
-			logger.warn("User not found: {}", userId);
-			return new ApiResponses<>("Invalid user ID or password", "FAILURE", null);
-		}
+	    User user = userRepo.findByUserId(userId);
 
-		if (!passwordEncoder.matches(rawPassword, user.getPassword())) {
-			logger.warn("Password mismatch for user: {}", userId);
-			return new ApiResponses<>("Invalid user ID or password", "FAILURE", null);
-		}
+	    if (user == null) {
+	        logger.warn("User not found: {}", userId);
+	        return new ApiResponses<>("Invalid user ID or password", "FAILURE", null);
+	    }
 
-		try {
-			List<PermissionFlags> permissions = permissionRepo.findByIdUserId(userId);
-			String jsonPermissions = objectMapper.writeValueAsString(permissions);
-			logger.info("User {} login successful. Permissions: {}", userId, jsonPermissions);
-			return new ApiResponses<>("Login successful", "SUCCESS", permissions);
-		} catch (Exception e) {
-			logger.error("Error retrieving permissions for user: {}", userId, e);
-			return new ApiResponses<>("Login successful but failed to fetch permissions", "PARTIAL_SUCCESS", null);
-		}
+	    if (!passwordEncoder.matches(rawPassword, user.getPassword())) {
+	        logger.warn("Password mismatch for user: {}", userId);
+	        return new ApiResponses<>("Invalid user ID or password", "FAILURE", null);
+	    }
+
+	    try {
+	        List<PermissionFlags> permissions = permissionRepo.findByIdUserId(userId);
+	        String token = JwtUtil.generateToken(user.getEmail());  // or userId, depending on your JWT subject design
+	        
+	        logger.info("the token is ---->>"+token);
+	        
+	        LoginResponse loginResponse = new LoginResponse(token, null);
+
+	        logger.info("User {} login successful. Token generated.", userId);
+
+	        return new ApiResponses<>("Login successful", "SUCCESS", loginResponse);
+	    } catch (Exception e) {
+	        logger.error("Error retrieving permissions for user: {}", userId, e);
+	        return new ApiResponses<>("Login successful but failed to fetch permissions", "PARTIAL_SUCCESS", null);
+	    }
 	}
 
+	
 	public boolean checkIfEmailExists(String email) {
 		return userRepo.existsByEmail(email);
 	}
@@ -198,5 +238,14 @@ public class UserManagementService {
 			return new ApiResponses<>("Email not found", "failed");
 		}
 	}
+
+	public User getUserByUsernameOrEmail(String identifier) {
+	    User user = userRepo.findByUsername(identifier);
+	    if (user == null) {
+	        user = userRepo.findByEmail(identifier);
+	    }
+	    return user;
+	}
+
 
 }

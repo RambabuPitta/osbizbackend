@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.orionsolwings.osbiz.userManagement.dto.UserPermissionRequest;
+import com.orionsolwings.osbiz.userManagement.model.LoginResponse;
 import com.orionsolwings.osbiz.userManagement.model.PermissionFlags;
 import com.orionsolwings.osbiz.userManagement.model.User;
 import com.orionsolwings.osbiz.userManagement.service.UserManagementService;
@@ -144,16 +145,36 @@ public class UserManagementController {
     }
     
     
+//    @PostMapping("/login")
+//    public ResponseEntity<ApiResponses<List<PermissionFlags>>> login(@RequestBody User users) {
+//    	
+//    	String userId=users.getUserId();
+//    	String password=users.getPassword();
+//    	
+//
+//        logger.info("Login request received for userId: {}", userId);
+//
+//        ApiResponses<List<PermissionFlags>> response = userManagementService.login(userId, password);
+//
+//        try {
+//            String json = objectMapper.writeValueAsString(response);
+//            logger.info("Login response: {}", json);
+//        } catch (Exception e) {
+//            logger.error("Failed to convert response to JSON for logging", e);
+//        }
+//
+//        return ResponseEntity.ok(response);
+//    }
+    
+    
     @PostMapping("/login")
-    public ResponseEntity<ApiResponses<List<PermissionFlags>>> login(@RequestBody User users) {
-    	
-    	String userId=users.getUserId();
-    	String password=users.getPassword();
-    	
+    public ResponseEntity<ApiResponses<LoginResponse>> login(@RequestBody User users) {
+        String userId = users.getUserId();
+        String password = users.getPassword();
 
         logger.info("Login request received for userId: {}", userId);
 
-        ApiResponses<List<PermissionFlags>> response = userManagementService.login(userId, password);
+        ApiResponses<LoginResponse> response = userManagementService.login(userId, password);
 
         try {
             String json = objectMapper.writeValueAsString(response);
@@ -164,6 +185,7 @@ public class UserManagementController {
 
         return ResponseEntity.ok(response);
     }
+
     
     
     @PostMapping("/forgot-password")
