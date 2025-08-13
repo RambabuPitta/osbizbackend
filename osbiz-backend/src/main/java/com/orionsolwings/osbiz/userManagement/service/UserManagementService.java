@@ -240,10 +240,9 @@ public class UserManagementService {
 	}
 
 	public User getUserByUsernameOrEmail(String identifier) {
-	    User user = userRepo.findByUsername(identifier);
-	    if (user == null) {
-	        user = userRepo.findByEmail(identifier);
-	    }
+	   
+	     User   user = userRepo.findByEmail(identifier);
+	    
 	    return user;
 	}
 

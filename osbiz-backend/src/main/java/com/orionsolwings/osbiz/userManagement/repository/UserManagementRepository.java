@@ -18,7 +18,6 @@ public interface UserManagementRepository extends MongoRepository<User, String> 
 
 	User findByEmailAndPassword(String email, String password);
 
-	User findByUsername(String username);
-
-	User findByEmail(String email);
-}
+	User findByEmail(String email); 
+	// already correct
+	}
