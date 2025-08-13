@@ -61,16 +61,24 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         logger.info("Initializing Security Configuration with JWT Authentication...");
 
-        http.csrf(csrf -> csrf.disable()) // Disable CSRF for APIs
+        http.csrf(csrf -> csrf.disable())
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/api/v1/usermanagement/login").permitAll() // Public endpoint
-                .anyRequest().authenticated() // All others need authentication
+                .requestMatchers(
+                    "/api/v1/usermanagement/login",
+                    "/api/v1/usermanagement/forgot-password",
+                    "/api/v1/company-profiles/createCompanyProfile",
+                    "/api/v1/usermanagement/setNewPassword",
+                    
+                    // ClientController public endpoints
+                    "/api/v1/clients/register"
+                ).permitAll()
+                .anyRequest().authenticated()
             )
-            // Add JWT filter before Spring Security's UsernamePasswordAuthenticationFilter
             .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
+
 
     
 }
