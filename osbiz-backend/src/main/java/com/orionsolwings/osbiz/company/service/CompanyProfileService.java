@@ -38,11 +38,14 @@ public class CompanyProfileService {
         try {
             logger.info("Received request to create Company Profile: {}", objectMapper.writeValueAsString(companyProfile));
 
+            String password=companyProfile.getPassword();
+            companyProfile.setPassword(null);
             CompanyProfile savedProfile = repository.save(companyProfile);
             logger.info("Company Profile saved successfully with ID: {}", savedProfile.getId());
 
             if (savedProfile != null) {
                 logger.info("Creating admin user and assigning permissions based on company profile...");
+                savedProfile.setPassword(password);
                 String msg = userManagementService.createAdminUserFromCompanyProfile(savedProfile);
                 logger.info("Admin user and permissions created for company: {}", savedProfile.getCompanyName());
                 logger.info(msg);
