@@ -1,6 +1,7 @@
 package com.orionsolwings.osbiz.userManagement.service;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -147,6 +148,8 @@ public class UserManagementService {
 				permissionId.setUserId(email);
 				permissionId.setRole("ADMIN");
 				permissionId.setModule(module.name());
+				permissionId.setEmail(email);
+				
 
 				PermissionFlags permissions = new PermissionFlags();
 				permissions.setId(permissionId);
@@ -244,6 +247,17 @@ public class UserManagementService {
 	     User   user = userRepo.findByEmail(identifier);
 	    
 	    return user;
+	}
+
+	public List<PermissionFlags> getPermissionsByEmail(String email) {
+	    // Step 1: Fetch the User by email
+	    User user = userRepo.findByEmail(email);
+	    if (user == null) {
+	        return Collections.emptyList(); // No user found for this email
+	    }
+
+	    // Step 2: Fetch Permissions by userId from PermissionFlags repository
+	    return permissionRepo.findByIdEmail(email);
 	}
 
 

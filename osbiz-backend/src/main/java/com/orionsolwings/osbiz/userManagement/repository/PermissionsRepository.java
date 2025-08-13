@@ -19,4 +19,6 @@ public interface PermissionsRepository extends MongoRepository<PermissionFlags, 
     PermissionFlags findByIdUserIdAndIdRoleAndIdModule(String userId, String role, String module);
 
     void deleteByIdUserId(String userId);
+
+	List<PermissionFlags> findByIdEmail(String email);
 }
