@@ -70,7 +70,8 @@ public class SecurityConfig {
                     "/api/v1/usermanagement/setNewPassword",
                     
                     // ClientController public endpoints
-                    "/api/v1/clients/register"
+                    "/api/v1/clients/register",
+                    "/api/v1/clients/verifyOtp"
                 ).permitAll()
                 .anyRequest().authenticated()
             )
