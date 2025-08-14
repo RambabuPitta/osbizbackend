@@ -61,7 +61,7 @@ public class GLAccountServiceImpl implements GLAccountService {
     @Override
     public GLAccount createGLAccount(GLAccount account) {
         // 1. Find NumberRange for GLACCOUNT
-        NumberRange nr = nrRepository.findByModuleType(ModuleNumberRange.GLACCOUNT.name())
+        NumberRange nr = nrRepository.findByModuleType(ModuleNumberRange. GENERAL_LEDGER.name())
             .orElseThrow(() -> new RuntimeException("Number Range not configured for GLACCOUNT"));
 
         // 2. Validate that range is not exceeded
