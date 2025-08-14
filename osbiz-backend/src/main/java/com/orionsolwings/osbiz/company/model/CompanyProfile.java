@@ -1,4 +1,5 @@
 package com.orionsolwings.osbiz.company.model;
+
 import java.time.LocalDate;
 
 import org.springframework.data.annotation.Id;
@@ -12,14 +13,14 @@ import jakarta.validation.constraints.NotBlank;
 @Document(collection = "company_profiles")
 public class CompanyProfile {
 
-    @Id
-    private String id;
-    
-    @NotBlank(message = "Business Code is required")
-    @Indexed(unique = true)
-    private String businessCode;
-    
-    public String getBusinessCode() {
+	@Id
+	private String id;
+
+	@NotBlank(message = "Business Code is required")
+	@Indexed(unique = true)
+	private String businessCode;
+
+	public String getBusinessCode() {
 		return businessCode;
 	}
 
@@ -27,99 +28,88 @@ public class CompanyProfile {
 		this.businessCode = businessCode;
 	}
 
-	public String getParentBusinessCode() {
-		return parentBusinessCode;
-	}
+	@NotBlank(message = "Company name is required")
+	@Indexed(unique = true)
+	private String companyName;
 
-	public void setParentBusinessCode(String parentBusinessCode) {
-		this.parentBusinessCode = parentBusinessCode;
-	}
+	@NotBlank(message = "Email address is required")
+	@Indexed(unique = true)
+	private String emailAddress;
 
-    @NotBlank(message = "Parent company's business code is required")
-	private String parentBusinessCode;
+	@NotBlank(message = "Phone number is required")
+	@Indexed(unique = true)
+	private String phoneNumber;
 
-    @NotBlank(message = "Company name is required")
-    @Indexed(unique = true)
-    private String companyName;
-
-    @NotBlank(message = "Email address is required")
-    @Indexed(unique = true)
-    private String emailAddress;
-
-    @NotBlank(message = "Phone number is required")
-    @Indexed(unique = true)
-    private String phoneNumber;
-
-    @NotBlank(message = "Password is required")
-    private String password;
+	@NotBlank(message = "Password is required")
+	private String password;
 
 //    @NotBlank(message = "Contact number is required")
 //    private String contactNumber;
 
-    @NotBlank(message = "Website URL is required")
-    private String websiteURL;
+	@NotBlank(message = "Website URL is required")
+	private String websiteURL;
 
-    @NotBlank(message = "Office address is required")
-    private String officeAddress;
+	@NotBlank(message = "Office address is required")
+	private String officeAddress;
 
-    @NotBlank(message = "Street address is required")
-    private String streetAddress;
+	@NotBlank(message = "Street address is required")
+	private String streetAddress;
 
-    private String streetAddressLine2;
+	private String streetAddressLine2;
 
-    @NotBlank(message = "City is required")
-    private String city;
+	@NotBlank(message = "City is required")
+	private String city;
 
-    @NotBlank(message = "State is required")
-    private String state;
+	@NotBlank(message = "State is required")
+	private String state;
 
-    @NotBlank(message = "Postal code is required")
-    private String postal;
+	@NotBlank(message = "Postal code is required")
+	private String postal;
 
-    @NotBlank(message = "Business organization type is required")
-    private String businessOrganizationType;
+	@NotBlank(message = "Business organization type is required")
+	private String businessOrganizationType;
 
-    private ContactPersonInformation contactPersonInformation;
+	private ContactPersonInformation contactPersonInformation;
 
-    @Field("GLAccount")
-    @NotBlank(message = "GL Account is required")
-    private String glAccount;
+	@Field("GLAccount")
+	@NotBlank(message = "GL Account is required")
+	private String glAccount;
 
-    @Field("Currency")
-    @NotBlank(message = "Currency is required")
-    private String currency;
+	@Field("Currency")
+	@NotBlank(message = "Currency is required")
+	private String currency;
 
-    @Field("financialYear")
-    @NotBlank(message = "Fiscal year is required")
-    private String fiscalYear;
+	@Field("financialYear")
+	@NotBlank(message = "Fiscal year is required")
+	private String fiscalYear;
 
-    @Field("bankHolderName")
-    private String bankHolderName;
+	@Field("bankHolderName")
+	private String bankHolderName;
 
-    @Field("accountName")
-    private String accountName;
+	@Field("accountName")
+	private String accountName;
 
-    @Field("bankName")
-    private String bankName;
+	@Field("bankName")
+	private String bankName;
 
-    @Field("bankCode")
-    private String bankCode;
+	@Field("bankCode")
+	private String bankCode;
 
-    @Field("accountType")
-    private String accountType;
+	@Field("accountType")
+	private String accountType;
 
-    @Field("country")
-    private String country;
+	@Field("country")
+	private String country;
 
-    @Field("UPI")
-    private String upi;
+	@Field("UPI")
+	private String upi;
 
-    private boolean signupAuth;
-    private boolean verifiyCompanyProfile;
-    private boolean adminAuth;
-    private boolean checkboxConfirmation;
+	private boolean signupAuth;
+	private boolean verifiyCompanyProfile;
+	private boolean adminAuth;
+	private boolean checkboxConfirmation;
 
-    public String getId() {
+	public String getId() {
 		return id;
 	}
 
@@ -368,8 +358,8 @@ public class CompanyProfile {
 	}
 
 	@DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
-    private LocalDate createtedDate;
+	private LocalDate createtedDate;
 
-    private String roleId;
+	private String roleId;
 
-   }
+}

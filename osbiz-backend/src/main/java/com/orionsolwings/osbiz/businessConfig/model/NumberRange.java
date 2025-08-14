@@ -14,8 +14,8 @@ public class NumberRange {
 	private String moduleType;
 
 	private String businessCode;
-	private String currentNumber;
-	private String minNumber;
+	private Long currentNumber;
+	private Long minNumber;
 
 	public String getId() {
 		return id;
@@ -42,29 +42,29 @@ public class NumberRange {
 	}
 
 	
-	public String getCurrentNumber() {
+	public Long getCurrentNumber() {
 		return currentNumber;
 	}
 
-	public void setCurrentNumber(String currentNumber) {
+	public void setCurrentNumber(Long currentNumber) {
 		this.currentNumber = currentNumber;
 	}
 
-	public String getMinNumber() {
+	public Long getMinNumber() {
 		return minNumber;
 	}
 
-	public void setMinNumber(String minNumber) {
+	public void setMinNumber(Long minNumber) {
 		this.minNumber = minNumber;
 	}
 
-	public String getMaxNumber() {
+	public Long getMaxNumber() {
 		return maxNumber;
 	}
 
-	public void setMaxNumber(String maxNumber) {
+	public void setMaxNumber(Long maxNumber) {
 		this.maxNumber = maxNumber;
 	}
 
-	private String maxNumber;
+	private Long maxNumber;
 }

@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface NumberRangeService {
-    NumberRange create(NumberRange numberRange);
+    List<NumberRange> create(List<NumberRange> numberRange);
     Optional<NumberRange> getByModuleType(String moduleType);
     List<NumberRange> getAll();
     NumberRange update(NumberRange numberRange);

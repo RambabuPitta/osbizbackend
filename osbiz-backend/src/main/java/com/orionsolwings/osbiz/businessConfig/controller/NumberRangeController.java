@@ -24,10 +24,10 @@ public class NumberRangeController {
     @Autowired
     private NumberRangeService service;
 
-    @PostMapping
-    public ResponseEntity<NumberRange> create(@RequestBody NumberRange numberRange) {
-        return ResponseEntity.ok(service.create(numberRange));
-    }
+	    @PostMapping
+	    public ResponseEntity<List<NumberRange>> create(@RequestBody List<NumberRange> numberRange) {
+	        return ResponseEntity.ok(service.create(numberRange));
+	    }
 
     @GetMapping("/{moduleType}")
     public ResponseEntity<NumberRange> getByModuleType(@PathVariable String moduleType) {

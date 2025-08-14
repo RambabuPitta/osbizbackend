@@ -200,7 +200,7 @@ public class UserManagementService {
 
 	    if (user == null) {
 	        logger.warn("User not found: {}", userId);
-	        return new ApiResponses<>("Invalid user ID or password", "FAILURE", null);
+	        return new ApiResponses<>("User not found. Please sign up.", "FAILURE", null);
 	    }
 
 	    if (!passwordEncoder.matches(rawPassword, user.getPassword())) {

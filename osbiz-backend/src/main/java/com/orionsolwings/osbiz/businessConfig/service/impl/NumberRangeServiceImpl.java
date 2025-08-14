@@ -14,10 +14,10 @@ public class NumberRangeServiceImpl implements NumberRangeService {
     @Autowired
     private NumberRangeRepository repository;
 
-    @Override
-    public NumberRange create(NumberRange numberRange) {
-        return repository.save(numberRange);
-    }
+//    @Override
+//    public NumberRange create(NumberRange numberRange) {
+//        return repository.save(numberRange);
+//    }
 
     @Override
     public Optional<NumberRange> getByModuleType(String moduleType) {
@@ -47,4 +47,14 @@ public class NumberRangeServiceImpl implements NumberRangeService {
     public void deleteByModuleType(String moduleType) {
         repository.deleteByModuleType(moduleType);
     }
+
+	@Override
+	public List<NumberRange> create(List<NumberRange> numberRange) {
+		// TODO Auto-generated method stub
+		return  repository.saveAll(numberRange);
+		
+	}
+    
+    
+    
 }
